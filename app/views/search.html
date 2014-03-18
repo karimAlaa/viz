@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <div class="row-fluid">
+        <span class="span3">
+            <input class="input-block-level" ng-model="queryTerm" type="text">
+        </span>&nbsp;
+        <button ng-click="search()" class="btn" type="button">Search</button>
+    </div>
+    <highchart id="chart1" config="chartConfig" class="span12" style="width:90%"></highchart>
+    <div class="row-fluid">
+        <div class="span4">
+            <ul>
+                <li ng-repeat="time in response">
+                    <h4>{{time.key|date:'hh:mm'}}</h4>
+                    <ul>
+                        <li ng-repeat="label in time.durations.buckets">
+                            <span>duration:{{label.key}}</span>&nbsp;<span>count:{{label.doc_count}}</span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
