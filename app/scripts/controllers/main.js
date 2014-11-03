@@ -7,4 +7,5 @@ angular.module('customVisulizationApp')
       'AngularJS',
       'Karma'
     ];
+    
   });

@@ -10,10 +10,10 @@
         <div class="span4">
             <ul>
                 <li ng-repeat="time in response">
-                    <h4>{{time.key|date:'hh:mm'}}</h4>
+                    <h4>{{time.key|date:'HH:mm'}}</h4>
                     <ul>
-                        <li ng-repeat="label in time.durations.buckets">
-                            <span>duration:{{label.key}}</span>&nbsp;<span>count:{{label.doc_count}}</span>
+                        <li ng-repeat="label in time.report_types.buckets">
+                            <span>type:{{label.key}}</span>&nbsp;<span>count:{{label.doc_count}}</span>
                         </li>
                     </ul>
                 </li>

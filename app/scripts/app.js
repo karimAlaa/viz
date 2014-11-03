@@ -8,9 +8,11 @@
   'ui.router',
   'elasticsearch',
   'highcharts-ng',
+  'ui.bootstrap',
 ])
   .config(function ($stateProvider, $urlRouterProvider) {
     //delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    
     
     $urlRouterProvider.otherwise('/');
     $stateProvider
@@ -23,6 +25,26 @@
         url:'/search',
         templateUrl: 'views/search.html',
         controller: 'SearchCtrl'
+      })
+      .state('kpi', {
+        url:'/kpi',
+        templateUrl: 'views/kpi.html',
+        controller: 'kpiCtrl'
+      })
+      .state('kpi2', {
+        url:'/kpi2',
+        templateUrl: 'views/kpi2.html',
+        controller: 'kpi2Ctrl'
+      })
+      .state('performance', {
+        url:'/performance',
+        templateUrl: 'views/performance.html',
+        controller: 'PerformanceCtrl'
+      })
+      .state('influx', {
+        url:'/influx',
+        templateUrl: 'views/influx.html',
+        controller: 'influxCtrl'
       })
   })
 
