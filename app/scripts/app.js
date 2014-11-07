@@ -8,7 +8,7 @@
   'ui.router',
   'elasticsearch',
   'highcharts-ng',
-  'ui.bootstrap',
+  // 'ui.bootstrap',
 ])
   .config(function ($stateProvider, $urlRouterProvider) {
     //delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -45,6 +45,11 @@
         url:'/influx',
         templateUrl: 'views/influx.html',
         controller: 'influxCtrl'
+      })
+      .state('map', {
+        url:'/map',
+        templateUrl: 'views/map.html',
+        controller: 'mapCtrl'
       })
   })
 
