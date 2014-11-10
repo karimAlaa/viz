@@ -51,6 +51,11 @@
         templateUrl: 'views/map.html',
         controller: 'mapCtrl'
       })
+      .state('graph', {
+        url:'/graph',
+        templateUrl: 'views/graph.html',
+        controller: 'graphCtrl'
+      })
   })
 
 
