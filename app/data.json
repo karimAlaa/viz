@@ -1,0 +1,18 @@
+{
+  "nodes":[
+    {"id":"0"},
+    {"id":"1"},
+    {"id":"2"},
+    {"id":"3"},
+    {"id":"4"},
+    {"id":"5"}
+  ],
+  "links":[
+    {"source":0,"target":1,"value":1, "road_id":"216", "name":"Me7war;Midan Juhayna To Da2ery",           "id":["174535959","50056142", "174538071","172993808", "174534397"]},
+    {"source":1,"target":2,"value":1, "road_id":"217", "name":"Me7war;Da2ery To Kobry 15 Mayo",           "id":["79583092","5091223", "174546681", "161998368"]},
+    {"source":2,"target":4,"value":1, "road_id":"5",   "name":"Kobry 15 Mayo;Mohandessin To West ElBalad","id":["174550560","305790195"]},
+    {"source":2,"target":5,"value":1, "road_id":"164", "name":"Kornich Agouza;Sheraton To Imbabaa",       "id":["22948103","22948117"]},
+    {"source":3,"target":4,"value":1, "road_id":"113", "name":"Kornich ElNile;West ElBalad To Arcadia",   "id":["10945548"]},
+    {"source":3,"target":5,"value":1, "road_id":"115", "name":"Kobry 6 October;Mohandesin To Ta7ri",      "id":["50219744","48980326","24869131"]}
+  ]
+}

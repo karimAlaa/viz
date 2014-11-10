@@ -1,0 +1,82 @@
+<style>
+    body {
+        margin: 0;
+    }
+    .map {
+        position: relative;
+        overflow: hidden;
+    }
+    .layerWater,
+    .layerRoads,
+    .layerBuildings,
+    .layerLabels {
+        position: absolute;
+    }
+    .tileWater,
+    .tileRoad,
+    .tileBuilding,
+    .tileLabel {
+        position: absolute;
+        width: 256px;
+        height: 256px;
+    }
+    .tileWater path {
+        stroke: none;
+    }
+    .tileRoad path, .tileLabel path {
+        fill: none;
+        stroke: #ccb;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+    }
+    .tileLabel path{
+        stroke: red;
+        stroke-width: 1.5px;
+    }
+    .tileRoad .major_road {
+        stroke: #CA8C50;
+        stroke-width: 1.5px;
+        -webkit-transition: all 0.25s ease-in-out;
+      -moz-transition: all 0.25s ease-in-out;
+      -o-transition: all 0.25s ease-in-out;
+      -ms-transition: all 0.25s ease-in-out;
+      transition: all 0.25s ease-in-out;
+    }
+    .tileRoad .minor_road {
+        stroke: #ccb;
+    }
+    .tileRoad .highway {
+        stroke: #B6B7CD;
+        stroke-width: 1.8px;
+    }
+    .tileRoad .rail {
+        stroke: #7de;
+    }
+    .info {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-family: sans-serif;
+    }
+    .date {
+        position: absolute;
+        bottom: 10px;
+        left: 40%;
+        font-family: sans-serif;
+    }
+    .tileWater .ocean {
+        stroke: none;
+        fill: #ededed;
+    }
+    .tileWater .lake,
+    .tileWater .reservoir,
+    .tileWater .riverbank,
+    .tileWater .water,
+    .tileWater .basin,
+    .tileWater .dam {
+        fill: #deebf7;
+    }
+    .white{
+        stroke:white !important;
+    }
+</style>

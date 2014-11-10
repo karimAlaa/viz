@@ -1,0 +1,41 @@
+<div class="container-fluid">
+	<h3>InfluxDB Custom Charts</h3>
+	<small>{{opts}}</small>
+	<br>
+    <form ng-submit="query()" class="row-fluid" ng-repeat="query in queries">
+<!--     	<br>
+    	<span></span>
+    	<span style="float:left;margin-left:25px">From:</span>
+		<span class="span2">
+            <input type="text" placeholder="From...." class="input-block-level" datepicker-popup="dd-MMMM-yyyy" ng-model="start_time" is-open="start_open" datepicker-options="dateOptions" ng-focus="open(start_open,$event)"/>
+        </span>
+        <span style="float:left;margin-left:25px">To:</span>
+        <span class="span2">        	
+            <input type="text" placeholder="To...." class="input-block-level" datepicker-popup="dd-MMMM-yyyy" ng-model="end_time" is-open="end_open" datepicker-options="dateOptions" ng-focus="open(end_open,$event)"/>
+        </span> 
+        <br> -->
+        <span class="span8" >
+        	<!-- <span >Select:</span> -->
+            <input class="input-block-level" placeholder="Select...." ng-model="query.string" type="text">
+        </span>&nbsp;
+
+     <!--    <span class="span8">
+        	<span >Where:</span>
+            <input class="input-block-level" placeholder="Where...." ng-model="whereTerm" type="text">
+        </span>
+        <span class="span8">
+        	<span >Group by:</span>
+            <input class="input-block-level" placeholder="group by...." ng-model="groupTerm" type="text">
+        </span> -->
+        <button ng-click="influxQuery(query)" class="span1 btn" ng-disabled="query.string==''" type="button">Query</button>
+        <button ng-click="removeQuery($index)" class="span1 btn" type="button">remove</button>
+    </form>
+    <button ng-click="addQuery()" class="span2 btn" type="button">Add new Query</button>
+    <button ng-click="normalize()" class="span2 btn" type="button">Normalize</button>
+    <button ng-click="getDifference()" class="span2 btn" type="button">Get difference</button>
+    <br />
+    <highchart id="chart1" config="chartConfig" class="span12" style="width:90%"></highchart>
+    <button ng-click="generateScatter()" class="span2 btn" type="button">Generate Scatter</button>
+
+    <highchart id="chart2" config="scatterConfig" class="span12" style="width:90%"></highchart>
+</div>
