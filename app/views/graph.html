@@ -1,14 +1,12 @@
 <style>
-
+/*
 	body { 
 		padding-top:20px;
-		/*background:url('http://graus.nu/blog/wp-content/themes/graus2/concrete2.png') fixed;*/
 		font-family:helvetica,arial;
 		text-shadow:#000 0px 1px 1px;
 		}
 	.date {
         position: absolute;
-        /*bottom: 10px;*/
         left: 40%;
         font-family: sans-serif;
         color:black;
@@ -49,32 +47,42 @@
 		color:red;
 		}
 
-/*.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
+*/
+	.graph {
+		margin:0 auto;
+		width:960px;
+		color:#FFF;
+		border: 1px dashed #333;
+		fill: black;
+	}	
+	.date {
+        position: absolute;
+        left: 40%;
+        font-family: sans-serif;
+        color:black;
+    }
+	path.link {
+	  fill: none;
+	  stroke: #666;
+	  stroke-width: 2px;
+	  -webkit-transition: all 0.25s ease-in-out;
+      -moz-transition: all 0.25s ease-in-out;
+      -o-transition: all 0.25s ease-in-out;
+      -ms-transition: all 0.25s ease-in-out;
+      transition: all 0.25s ease-in-out;
+	}
 
-.link {
-  stroke: #999;
-  stroke-opacity: .6;
-}
+	circle {
+	  fill: #ccc;
+	  stroke: black;
+	  stroke-width: 2px;
+	}
 
-svg .circle {
-  fill: steelblue;
-  stroke: white;
-  stroke-width: 1;
-}
-svg circle:hover{
-  cursor: pointer;
-}
-svg circle:active{
-  stroke: yellow;
-}
-svg .link_line {
-  stroke: rgba(255,255,255,.5);
-  stroke-width: 1.5;
-}*/
-
+	text {
+	  fill: #000;
+	  font: 10px sans-serif;
+	  pointer-events: none;
+	}
 </style>
 
 <div class="graph"></div>

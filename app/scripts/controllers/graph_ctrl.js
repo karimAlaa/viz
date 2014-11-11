@@ -5,130 +5,138 @@ angular.module('customVisulizationApp')
  
     var graph = 'data.json'
 
-    // var roads = JSON.parse('data.json')
+ //    // var roads = JSON.parse('data.json')
     var request = new XMLHttpRequest();
     request.open("GET", graph, false);
     request.send(null)
     var roads = JSON.parse(request.responseText).links;
-    console.log(roads)
+ //    console.log(roads)
 
-	var w = 960,
-	h = 590,
-	r = 10;
+	// var w = 960,
+	// h = 590,
+	// r = 10;
 
-	var vis = d3.select(".graph")
-		.append("svg:svg")
-		.attr("width", w)
-		.attr("height", h)
-		.attr("pointer-events", "all")
-		.append('svg:g')
-		// .call(d3.behavior.zoom().on("zoom", redraw))
-		.append('svg:g');
+	// var vis = d3.select(".graph")
+	// 	.append("svg:svg")
+	// 	.attr("width", w)
+	// 	.attr("height", h)
+	// 	.attr("pointer-events", "all")
+	// 	.append('svg:g')
+	// 	// .call(d3.behavior.zoom().on("zoom", redraw))
+	// 	// .append('svg:g');
 
-	vis.append('svg:rect')
-	    .attr('width', w)
-	    .attr('height', h)
-	    .attr('fill', 'rgba(1,1,1,0)')
+	// vis.append('svg:rect')
+	//     .attr('width', w)
+	//     .attr('height', h)
+	//     .attr('fill', 'rgba(1,1,1,0)')
 
-    var date = d3.select(".graph").append("div")
+    
+
+	// function redraw() {
+	// 	console.log("here", d3.event.translate, d3.event.scale);
+	// 	vis.attr("transform","translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")"); 
+	// }	
+		
+	// var force = d3.layout.force()
+	// 	.gravity(.03)
+	// 	.charge(-1200)
+	// 	.linkDistance( 200 )
+	// 	.size([w, h]);
+	
+	// // var svg = d3.select(".text").append("svg")
+	// // 	.attr("width", w)
+	// // 	.attr("height", h);
+			
+	// d3.json(graph, function(json) {
+	// 	force
+	// 		.nodes(json.nodes)
+	// 		.links(json.links)
+	// 		.on("tick", tick)
+	// 		.start();
+
+	// 		var link = vis.selectAll(".gLink")
+	//             .data(force.links())
+	//       		.enter().append("g")
+	//       		.attr("class", "gLink")
+	// 			.append("line")
+	// 			.attr("class", "link")
+	// 			.attr("stroke-width","6")
+	// 			.attr("id", function(d){
+	// 				return d.road_id
+	// 			})
+	// 			.on("mouseover", function(){d3.select(this).style("stroke", "#CA8C50")})
+	// 			.on("mouseout", function(){d3.select(this).style("stroke", "#ccb")})
+
+	// 		var linkText = vis.selectAll(".gLink")
+	// 		    .data(force.links())
+	// 		    .append("text")
+	// 		    .attr("font-family", "Arial, Helvetica, sans-serif")
+	// 		    .attr("fill", "Black")
+	// 		    .style("font", "normal 12px Arial")
+	// 		    .attr("dy", "0em")
+	// 		    .text(function(d) { return d.name; })
+
+	// 		var node = vis.selectAll("g.node")
+	// 			.data(json.nodes)
+	// 			.enter().append("svg:g")
+	// 			.attr("class","node")
+	// 			.call(force.drag);
+				
+	// 			node.append("svg:circle")
+	// 				.attr("r", r )
+	// 				.style("stroke-width", "4")
+	// 				.on("mouseover", function(){d3.select(this).style("fill", "#999")})
+	// 				.on("mouseout", function(d) {d3.select(this).style("fill","black")})
+					
+	// 			node.append("svg:text")
+	// 				.attr("text-anchor", "middle") 
+	// 				.attr("fill","skyblue")
+	// 				.style("pointer-events", "none")
+	// 				.attr("font-size", "9px")
+	// 				.attr("font-weight", "100" )
+	// 				.text( function(d) { return d.id} ) ;
+				
+ //  		function tick() {
+	// 	    node.attr("cx", function(d) { return d.x; })
+	// 	        .attr("cy", function(d) { return d.y; })
+	// 			.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")";});
+
+	// 	    link.attr("x1", function(d) { return d.source.x; })
+	// 	        .attr("y1", function(d) { return d.source.y; })
+	// 	        .attr("x2", function(d) { return d.target.x; })
+	// 	        .attr("y2", function(d) { return d.target.y; });
+
+	//         linkText.attr("x", function(d) {
+	// 		        if (d.target.x > d.source.x)
+	// 		            return (d.source.x + (d.target.x - d.source.x)/2)
+	// 		        else
+	// 		            return (d.target.x + (d.source.x - d.target.x)/2)
+	// 		    })
+	// 		    .attr("y", function(d) {
+	// 		        if (d.target.y > d.source.y)
+	// 		            return (d.source.y + (d.target.y - d.source.y)/2)
+	// 		        else
+	// 		            return (d.target.y + (d.source.y - d.target.y)/2)
+	// 		    })
+	//   	}
+	// });
+	var width = 960,
+    	height = 580;
+	var svg = d3.select(".graph").append("svg")
+		    .attr("width", width)
+		    .attr("height", height);
+
+ 	var date = d3.select(".graph").append("div")
         .attr("class", "date");
 
-	function redraw() {
-		console.log("here", d3.event.translate, d3.event.scale);
-		vis.attr("transform","translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")"); 
-	}	
-		
-	var force = d3.layout.force()
-		.gravity(.03)
-		.charge(-1200)
-		.linkDistance( 200 )
-		.size([w, h]);
-	
-	var svg = d3.select(".text").append("svg")
-		.attr("width", w)
-		.attr("height", h);
-			
-	d3.json(graph, function(json) {
-		force
-			.nodes(json.nodes)
-			.links(json.links)
-			.on("tick", tick)
-			.start();
-
-			var link = vis.selectAll(".gLink")
-	            .data(force.links())
-	      		.enter().append("g")
-	      		.attr("class", "gLink")
-				.append("line")
-				.attr("class", "link")
-				.attr("stroke-width","6")
-				.attr("id", function(d){
-					return d.road_id
-				})
-				.on("mouseover", function(){d3.select(this).style("stroke", "#CA8C50")})
-				.on("mouseout", function(){d3.select(this).style("stroke", "#ccb")})
-
-			var linkText = vis.selectAll(".gLink")
-			    .data(force.links())
-			    .append("text")
-			    .attr("font-family", "Arial, Helvetica, sans-serif")
-			    .attr("fill", "Black")
-			    .style("font", "normal 12px Arial")
-			    .attr("dy", "0em")
-			    .text(function(d) { return d.name; })
-
-			var node = vis.selectAll("g.node")
-				.data(json.nodes)
-				.enter().append("svg:g")
-				.attr("class","node")
-				.call(force.drag);
-				
-				node.append("svg:circle")
-					.attr("r", r )
-					.style("stroke-width", "4")
-					.on("mouseover", function(){d3.select(this).style("fill", "#999")})
-					.on("mouseout", function(d) {d3.select(this).style("fill","black")})
-					
-				node.append("svg:text")
-					.attr("text-anchor", "middle") 
-					.attr("fill","skyblue")
-					.style("pointer-events", "none")
-					.attr("font-size", "9px")
-					.attr("font-weight", "100" )
-					.text( function(d) { return d.id} ) ;
-				
-  		function tick() {
-		    node.attr("cx", function(d) { return d.x; })
-		        .attr("cy", function(d) { return d.y; })
-				.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")";});
-
-		    link.attr("x1", function(d) { return d.source.x; })
-		        .attr("y1", function(d) { return d.source.y; })
-		        .attr("x2", function(d) { return d.target.x; })
-		        .attr("y2", function(d) { return d.target.y; });
-
-	        linkText.attr("x", function(d) {
-			        if (d.target.x > d.source.x)
-			            return (d.source.x + (d.target.x - d.source.x)/2)
-			        else
-			            return (d.target.x + (d.source.x - d.target.x)/2)
-			    })
-			    .attr("y", function(d) {
-			        if (d.target.y > d.source.y)
-			            return (d.source.y + (d.target.y - d.source.y)/2)
-			        else
-			            return (d.target.y + (d.source.y - d.target.y)/2)
-			    })
-	  	}
-	});
-
-	var start_date = '2013-06-20'
-    var end_date = '2013-06-25'
+    var start_date = '2013-06-23'
+    var end_date = '2013-06-28'
     var group_by_time = 10
     var date_template = setDateTemplate(start_date, end_date, group_by_time)
     var date_template_length =Object.keys(date_template).length
 
     var time_index= 0
+    var speed= 500
     var interval_running = false
     var interval_promise= null
 
@@ -137,7 +145,6 @@ angular.module('customVisulizationApp')
             road.data = data[1]
             console.log(road)
        	})
-
 	})       
 
     shortcut.add("Enter",function() {
@@ -158,7 +165,7 @@ angular.module('customVisulizationApp')
                     interval_running = false
                     time_index = 0
                 }
-            },250)
+            },speed)
         }
         
     },{"disable_in_input" : false, 'propagate':false});
@@ -177,6 +184,94 @@ angular.module('customVisulizationApp')
         }
     })
 
+
+	d3.json(graph, function(json) {		
+
+		var force = d3.layout.force()
+		    .nodes(d3.values(json.nodes))
+		    .links(json.links)
+		    .size([width, height])
+		    .gravity(.03)
+		    .linkDistance(200)
+		    .charge(-2000)
+		    .on("tick", tick)
+		    .start();
+
+		svg.append("svg:defs").selectAll("marker")
+		    .data(["end"])      
+		  .enter().append("svg:marker") 
+		    .attr("id", String)
+		    .attr("viewBox", "0 -5 10 10")
+		    .attr("refX", 20)
+		    .attr("refY", 0)
+		    .attr("markerWidth", 4)
+		    .attr("markerHeight", 4)
+		    .attr("orient", "auto")
+		  	.append("svg:path")
+		    .attr("d", "M0,-5L10,0L0,5");
+
+		var path = svg.append("svg:g").selectAll("path")
+		    .data(force.links())
+		  	.enter().append("svg:path")
+		    .attr("class", function(d){
+		    	return "link "+d.road_id
+		    })
+		    .attr("id", function(d){
+				return "l_"+d.id
+			})
+		    .attr("marker-end", "url(#end)");
+
+	    var linktext = svg.append("svg:g").selectAll("g.linklabelholder").data(force.links());
+	
+    	linktext.enter().append("g").attr("class", "linklabelholder")
+     		.append("text")
+	     	.attr("class", "linklabel")
+		 	.style("font-size", "9px")
+	     	.attr("x", "30")
+		 	.attr("dy", "-10")
+	     	.attr("text-anchor", "start")
+		   	.style("fill","#000")
+		 	.append("textPath")
+	    	.attr("xlink:href",function(d,i) { return "#l_" + d.id;})
+	     	.text(function(d) { 
+		 		return d.name; 
+		 	});
+
+		var node = svg.selectAll(".node")
+		    .data(force.nodes())
+		    .enter().append("g")
+		    .attr("class", "node")
+		    .call(force.drag);
+
+		node.append("circle")
+		    .attr("r", 10);
+
+		node.append("text")
+			.attr("text-anchor", "middle") 
+			.attr("fill","skyblue")
+			.style("pointer-events", "none")
+			.attr("font-size", "9px")
+			.attr("font-weight", "100" )
+			.text( function(d) { return d.id} ) ; 
+
+		function tick() {
+		    path.attr("d", function(d) {
+		        var dx = d.target.x - d.source.x,
+		            dy = d.target.y - d.source.y,
+		            dr = Math.sqrt((dx * dx)/0.05 + (dy * dy)/0.05);
+		        return "M" + 
+		            d.source.x + "," + 
+		            d.source.y + "A" + 
+		            dr + "," + dr + " 0 0,1 " + 
+		            d.target.x + "," + 
+		            d.target.y;
+		    });
+
+		    node.attr("transform", function(d) { 
+		  	    return "translate(" + d.x + "," + d.y + ")"; });
+		}
+
+	});
 
 
 	function getData(id, start_date, end_date, group_by_time){
@@ -200,13 +295,13 @@ angular.module('customVisulizationApp')
     function changeStrokeWidth(id, val){
         console.log("width: "+val)
         var width = val == -1? 1.5 : val/2
-        $('#'+id).css('stroke-width',width)
+        $('.'+id).css('stroke-width',width)
     }
 
     function changeStrokeColor(id, val){
         console.log("color: "+val)
         var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
-        $('#'+id).css('stroke', color)    
+        $('.'+id).css('stroke', color)    
         
     }
 
@@ -287,8 +382,6 @@ angular.module('customVisulizationApp')
             d.setMinutes(d.getMinutes()+diff)
         }
         return obj
-    }   
-
-
+    }  
 
 })

@@ -1,18 +1,28 @@
 {
   "nodes":[
-    {"id":"0"},
-    {"id":"1"},
-    {"id":"2"},
-    {"id":"3"},
-    {"id":"4"},
-    {"id":"5"}
+    {"id":"0", "title":"Midan Juhayna"},
+    {"id":"1","title":"Me7war bridge entry"},
+    {"id":"2","title":"Me7war Da2ry entry"},
+    {"id":"3","title":"Kobry 15 Mayo"},
+    {"id":"4","title":"Mohandessin"},
+    {"id":"5","title":"West ElBalad"},
+    {"id":"6","title":"Ta7ri"}
   ],
   "links":[
-    {"source":0,"target":1,"value":1, "road_id":"216", "name":"Me7war;Midan Juhayna To Da2ery",           "id":["174535959","50056142", "174538071","172993808", "174534397"]},
-    {"source":1,"target":2,"value":1, "road_id":"217", "name":"Me7war;Da2ery To Kobry 15 Mayo",           "id":["79583092","5091223", "174546681", "161998368"]},
-    {"source":2,"target":4,"value":1, "road_id":"5",   "name":"Kobry 15 Mayo;Mohandessin To West ElBalad","id":["174550560","305790195"]},
-    {"source":2,"target":5,"value":1, "road_id":"164", "name":"Kornich Agouza;Sheraton To Imbabaa",       "id":["22948103","22948117"]},
-    {"source":3,"target":4,"value":1, "road_id":"113", "name":"Kornich ElNile;West ElBalad To Arcadia",   "id":["10945548"]},
-    {"source":3,"target":5,"value":1, "road_id":"115", "name":"Kobry 6 October;Mohandesin To Ta7ri",      "id":["50219744","48980326","24869131"]}
+    {"id":"0",  "road_id":"216", "source":0, "target":1, "name":"Me7war;Midan Juhayna To bridge",           "map_ids":["174535959","50056142", "174538071","172993808", "174534397"]},
+    {"id":"1",  "road_id":"219", "source":1, "target":0, "name":"Me7war;bridge To Midan Juhayna",      "map_ids":[]},
+    {"id":"2",  "road_id":"216", "source":1, "target":2, "name":"Me7war;bridge To Da2ery",           "map_ids":["174535959","50056142", "174538071","172993808", "174534397"]},
+    {"id":"3",  "road_id":"219", "source":2, "target":1, "name":"Me7war;Da2ery To bridge",      "map_ids":[]},
+    {"id":"4",  "road_id":"217", "source":2, "target":3, "name":"Me7war;Da2ery To Kobry 15 Mayo",           "map_ids":["79583092","5091223", "174546681", "161998368"]},
+    {"id":"5",  "road_id":"218", "source":3, "target":2, "name":"Me7war;Kobry 15 Mayo To Da2ery",      "map_ids":[]},
+    {"id":"6",  "road_id":"5",   "source":3, "target":4, "name":"Kobry 15 Mayo;Mohandessin To West ElBalad","map_ids":["174550560","305790195"]},
+    {"id":"7",  "road_id":"6",   "source":4, "target":3, "name":"Kobry 15 Mayo;West ElBalad To Mohandessin", "map_ids":[]},
+    {"id":"8",  "road_id":"164", "source":6, "target":5, "name":"Kobry 6 October;Mohandesin To Ta7ri",       "map_ids":["22948103","22948117"]},
+    {"id":"9",  "road_id":"167", "source":5, "target":6, "name":"Kobry 6 October;Ta7rir To Mohandesin", "map_ids":[]},
+    {"id":"10", "road_id":"113", "source":5, "target":4, "name":"Kornich ElNile;West ElBalad To Arcadia",   "map_ids":["10945548"]},
+    {"id":"11", "road_id":"114", "source":4, "target":5, "name":"Kornich ElNile;Arcadia To West ElBalad", "map_ids":[]},
+    {"id":"12", "road_id":"115", "source":6, "target":3, "name":"Kornich Agouza;Sheraton To Imbabaa",      "map_ids":["50219744","48980326","24869131"]},
+    {"id":"13", "road_id":"115", "source":3, "target":6, "name":"Kornich Agouza;Imbaba To Sheraton", "map_ids":[]}
   ]
 }
+
