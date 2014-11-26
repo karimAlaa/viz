@@ -5,144 +5,44 @@ angular.module('customVisulizationApp')
  
     var graph = 'data.json'
 
- //    // var roads = JSON.parse('data.json')
     var request = new XMLHttpRequest();
     request.open("GET", graph, false);
     request.send(null)
     var roads = JSON.parse(request.responseText).links;
- //    console.log(roads)
 
-	// var w = 960,
-	// h = 590,
-	// r = 10;
+	var width = 1400,
+    	height = 610;
 
-	// var vis = d3.select(".graph")
-	// 	.append("svg:svg")
-	// 	.attr("width", w)
-	// 	.attr("height", h)
-	// 	.attr("pointer-events", "all")
-	// 	.append('svg:g')
-	// 	// .call(d3.behavior.zoom().on("zoom", redraw))
-	// 	// .append('svg:g');
+	var x = d3.scale.linear()
+    	.domain([0, width])
+    	.range([0, width]);
 
-	// vis.append('svg:rect')
-	//     .attr('width', w)
-	//     .attr('height', h)
-	//     .attr('fill', 'rgba(1,1,1,0)')
+	var y = d3.scale.linear()
+    	.domain([0, height])
+    	.range([0,height]);
 
-    
-
-	// function redraw() {
-	// 	console.log("here", d3.event.translate, d3.event.scale);
-	// 	vis.attr("transform","translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")"); 
-	// }	
-		
-	// var force = d3.layout.force()
-	// 	.gravity(.03)
-	// 	.charge(-1200)
-	// 	.linkDistance( 200 )
-	// 	.size([w, h]);
-	
-	// // var svg = d3.select(".text").append("svg")
-	// // 	.attr("width", w)
-	// // 	.attr("height", h);
-			
-	// d3.json(graph, function(json) {
-	// 	force
-	// 		.nodes(json.nodes)
-	// 		.links(json.links)
-	// 		.on("tick", tick)
-	// 		.start();
-
-	// 		var link = vis.selectAll(".gLink")
-	//             .data(force.links())
-	//       		.enter().append("g")
-	//       		.attr("class", "gLink")
-	// 			.append("line")
-	// 			.attr("class", "link")
-	// 			.attr("stroke-width","6")
-	// 			.attr("id", function(d){
-	// 				return d.road_id
-	// 			})
-	// 			.on("mouseover", function(){d3.select(this).style("stroke", "#CA8C50")})
-	// 			.on("mouseout", function(){d3.select(this).style("stroke", "#ccb")})
-
-	// 		var linkText = vis.selectAll(".gLink")
-	// 		    .data(force.links())
-	// 		    .append("text")
-	// 		    .attr("font-family", "Arial, Helvetica, sans-serif")
-	// 		    .attr("fill", "Black")
-	// 		    .style("font", "normal 12px Arial")
-	// 		    .attr("dy", "0em")
-	// 		    .text(function(d) { return d.name; })
-
-	// 		var node = vis.selectAll("g.node")
-	// 			.data(json.nodes)
-	// 			.enter().append("svg:g")
-	// 			.attr("class","node")
-	// 			.call(force.drag);
-				
-	// 			node.append("svg:circle")
-	// 				.attr("r", r )
-	// 				.style("stroke-width", "4")
-	// 				.on("mouseover", function(){d3.select(this).style("fill", "#999")})
-	// 				.on("mouseout", function(d) {d3.select(this).style("fill","black")})
-					
-	// 			node.append("svg:text")
-	// 				.attr("text-anchor", "middle") 
-	// 				.attr("fill","skyblue")
-	// 				.style("pointer-events", "none")
-	// 				.attr("font-size", "9px")
-	// 				.attr("font-weight", "100" )
-	// 				.text( function(d) { return d.id} ) ;
-				
- //  		function tick() {
-	// 	    node.attr("cx", function(d) { return d.x; })
-	// 	        .attr("cy", function(d) { return d.y; })
-	// 			.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")";});
-
-	// 	    link.attr("x1", function(d) { return d.source.x; })
-	// 	        .attr("y1", function(d) { return d.source.y; })
-	// 	        .attr("x2", function(d) { return d.target.x; })
-	// 	        .attr("y2", function(d) { return d.target.y; });
-
-	//         linkText.attr("x", function(d) {
-	// 		        if (d.target.x > d.source.x)
-	// 		            return (d.source.x + (d.target.x - d.source.x)/2)
-	// 		        else
-	// 		            return (d.target.x + (d.source.x - d.target.x)/2)
-	// 		    })
-	// 		    .attr("y", function(d) {
-	// 		        if (d.target.y > d.source.y)
-	// 		            return (d.source.y + (d.target.y - d.source.y)/2)
-	// 		        else
-	// 		            return (d.target.y + (d.source.y - d.target.y)/2)
-	// 		    })
-	//   	}
-	// });
-	var width = 960,
-    	height = 580;
 	var svg = d3.select(".graph").append("svg")
 		    .attr("width", width)
-		    .attr("height", height);
+		    .attr("height", height)
+		    
 
  	var date = d3.select(".graph").append("div")
         .attr("class", "date");
 
-    var start_date = '2013-06-23'
-    var end_date = '2013-06-28'
+    var start_date = '2013-06-24'
+    var end_date = '2013-07-01'
     var group_by_time = 10
     var date_template = setDateTemplate(start_date, end_date, group_by_time)
     var date_template_length =Object.keys(date_template).length
 
     var time_index= 0
-    var speed= 500
+    var speed= 200
     var interval_running = false
     var interval_promise= null
 
 	roads.forEach(function(road){
 		getData(road.road_id, start_date, end_date, group_by_time).then(function(data){
-            road.data = data[1]
+            road.data = data
             console.log(road)
        	})
 	})       
@@ -191,15 +91,17 @@ angular.module('customVisulizationApp')
 		    .nodes(d3.values(json.nodes))
 		    .links(json.links)
 		    .size([width, height])
-		    .gravity(.03)
-		    .linkDistance(200)
-		    .charge(-2000)
-		    .on("tick", tick)
+		    // .gravity(.03)
+		    // .linkDistance(200)
+		    // .charge(-2000)
+		    .on("tick", function(){})
 		    .start();
 
-		svg.append("svg:defs").selectAll("marker")
+		svg
+		.call(d3.behavior.zoom().x(x).y(y).scaleExtent([1, 8]).on("zoom", tick))
+		.append("svg:defs").selectAll("marker")
 		    .data(["end"])      
-		  .enter().append("svg:marker") 
+		  	.enter().append("svg:marker") 
 		    .attr("id", String)
 		    .attr("viewBox", "0 -5 10 10")
 		    .attr("refX", 20)
@@ -207,6 +109,7 @@ angular.module('customVisulizationApp')
 		    .attr("markerWidth", 4)
 		    .attr("markerHeight", 4)
 		    .attr("orient", "auto")
+		    .attr("fill","indianred")
 		  	.append("svg:path")
 		    .attr("d", "M0,-5L10,0L0,5");
 
@@ -216,23 +119,29 @@ angular.module('customVisulizationApp')
 		    .attr("class", function(d){
 		    	return "link "+d.road_id
 		    })
-		    .attr("id", function(d){
-				return "l_"+d.id
+		    .attr("id", function(d, i){
+				return "l_"+i
 			})
 		    .attr("marker-end", "url(#end)");
 
-	    var linktext = svg.append("svg:g").selectAll("g.linklabelholder").data(force.links());
-	
-    	linktext.enter().append("g").attr("class", "linklabelholder")
+	    var linktext = svg.append("svg:g")
+	    	.selectAll("g.linklabelholder")
+	    	.data(force.links())
+    		.enter().append("g").attr("class", "linklabelholder")
      		.append("text")
 	     	.attr("class", "linklabel")
-		 	.style("font-size", "9px")
-	     	.attr("x", "30")
-		 	.attr("dy", "-10")
+		 	.style("font-size", "6px")
+		 	.style("font-weight", "200")
+	     	.attr("x", function(d){
+	     		return Math.abs(x(((d.target.x - d.source.x)/4)-20))
+	     	})
+		 	.attr("dy", "-5")
 	     	.attr("text-anchor", "start")
 		   	.style("fill","#000")
+
+	   	var linktextpath = linktext
 		 	.append("textPath")
-	    	.attr("xlink:href",function(d,i) { return "#l_" + d.id;})
+	    	.attr("xlink:href",function(d,i) { return "#l_" + i;})
 	     	.text(function(d) { 
 		 		return d.name; 
 		 	});
@@ -240,45 +149,57 @@ angular.module('customVisulizationApp')
 		var node = svg.selectAll(".node")
 		    .data(force.nodes())
 		    .enter().append("g")
-		    .attr("class", "node")
-		    .call(force.drag);
+		    .attr("class", function(d){
+		    	if(d.invisible)
+		    		return "node invisible"
+		    	else
+		    		return "node"
+		    })
+		    // .call(force.drag);
 
 		node.append("circle")
-		    .attr("r", 10);
-
+		    .attr("r", 10)
+		    .attr("cx", function(d) { return x(d.x) })
+     		.attr("cy", function(d) { return y(d.y) })
+//rgb(181, 17, 54)
 		node.append("text")
 			.attr("text-anchor", "middle") 
-			.attr("fill","skyblue")
+			.attr("fill","brown")
 			.style("pointer-events", "none")
-			.attr("font-size", "9px")
-			.attr("font-weight", "100" )
-			.text( function(d) { return d.id} ) ; 
+			.attr("font-size", "10px")
+			.style("font-weight", "500")
+			.text( function(d) { return d.title} )
+			.attr("x", function(d){return x(d.x)}) 
+			.attr("y", function(d){return y(d.y)}) 
 
 		function tick() {
 		    path.attr("d", function(d) {
-		        var dx = d.target.x - d.source.x,
-		            dy = d.target.y - d.source.y,
-		            dr = Math.sqrt((dx * dx)/0.05 + (dy * dy)/0.05);
+		        var dx = x(d.target.x - d.source.x),
+		            dy = y(d.target.y - d.source.y),
+		            dr = Math.max(900,Math.sqrt((dx * dx)/0.05 + (dy * dy)/0.05));
 		        return "M" + 
-		            d.source.x + "," + 
-		            d.source.y + "A" + 
+		            x(d.source.x) + "," + 
+		            y(d.source.y) + "A" + 
 		            dr + "," + dr + " 0 0,1 " + 
-		            d.target.x + "," + 
-		            d.target.y;
+		            x(d.target.x) + "," + 
+		            y(d.target.y);
 		    });
 
 		    node.attr("transform", function(d) { 
-		  	    return "translate(" + d.x + "," + d.y + ")"; });
+		  	    return "translate(" + d3.event.translate+ ") scale(" + d3.event.scale + ")"; });
 		}
 
+		tick()
+
 	});
+
 
 
 	function getData(id, start_date, end_date, group_by_time){
         var deferred = $q.defer();
         influxQuery("select count(status) from road_"+id+" where status=0 and time > '"+start_date+"' and time < '"+end_date+"' group by time("+group_by_time+"m)").then(function(views){
             influxQuery("select mean(status) from road_"+id+" where status>0 and status<6 and time > '"+start_date+"' and time < '"+end_date+"' group by time("+group_by_time+"m)").then(function(status){
-                deferred.resolve([id,merge(views,status, angular.copy(date_template))])
+                deferred.resolve(merge(views,status, angular.copy(date_template)))
             })
         })
         return deferred.promise
@@ -300,8 +221,10 @@ angular.module('customVisulizationApp')
 
     function changeStrokeColor(id, val){
         console.log("color: "+val)
-        var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
-        $('.'+id).css('stroke', color)    
+        // var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
+        //$('.'+id).css('stroke', color)    
+        if(val != -1)
+        	$('.'+id).css('stroke', hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1))    
         
     }
 
@@ -321,13 +244,10 @@ angular.module('customVisulizationApp')
 
     function merge(arr1, arr2, obj){
         arr1.forEach(function(a){
-            obj[a[0]][1] = a[1]// [a[0], a[1], -1]
+            obj[a[0]][1] = a[1]
         })
         arr2.forEach(function(a){
             obj[a[0]][2] = a[1]-1
-            // if(obj[a[0]].length)
-            // else
-            //     obj[a[0]] = [a[0], -1, a[1]-1]
         })
 
         var merged_arr = $.map(obj, function(value, index) {

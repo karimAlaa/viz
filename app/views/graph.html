@@ -50,7 +50,7 @@
 */
 	.graph {
 		margin:0 auto;
-		width:960px;
+		width:1400px;
 		color:#FFF;
 		border: 1px dashed #333;
 		fill: black;
@@ -60,6 +60,9 @@
         left: 40%;
         font-family: sans-serif;
         color:black;
+    }
+    .invisible{
+    	opacity: 0
     }
 	path.link {
 	  fill: none;
@@ -73,16 +76,17 @@
 	}
 
 	circle {
-	  fill: #ccc;
-	  stroke: black;
+	  /*fill: #ccc;*/
+	  fill: wheat;
+	  stroke: rgb(108, 83, 55);
 	  stroke-width: 2px;
 	}
 
-	text {
+	/*text {
 	  fill: #000;
 	  font: 10px sans-serif;
 	  pointer-events: none;
-	}
+	}*/
 </style>
 
 <div class="graph"></div>
