@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('customVisulizationApp')
-  .controller('graphCtrl', function ($scope, statistics, util, influxdb, $q, $interval) {
+  .controller('graphCtrl', function ($scope, statistics, util, influxdbmin, $q, $interval) {
  
     var graph = 'data.json'
 
@@ -40,27 +40,28 @@ angular.module('customVisulizationApp')
     var interval_running = false
     var interval_promise= null
 
+       
 	roads.forEach(function(road){
 		getData(road.road_id, start_date, end_date, group_by_time).then(function(data){
             road.data = data
-            console.log(road)
+            //console.log(road)
        	})
 	})       
 
     shortcut.add("Enter",function() {
         if(interval_running){
-            console.log("stop")
+            //console.log("stop")
             $interval.cancel(interval_promise)
             interval_running = false
         }
         else{
-            console.log("start")
+            //console.log("start")
             interval_running = true
             interval_promise= $interval(function(){
                 animateRoads(roads, time_index)
                 time_index++
                 if(time_index>date_template_length-1){
-                    console.log("done")
+                    //console.log("done")
                     $interval.cancel(interval_promise)
                     interval_running = false
                     time_index = 0
@@ -196,31 +197,30 @@ angular.module('customVisulizationApp')
 
 
 	function getData(id, start_date, end_date, group_by_time){
+       
         var deferred = $q.defer();
-        influxQuery("select count(status) from road_"+id+" where status=0 and time > '"+start_date+"' and time < '"+end_date+"' group by time("+group_by_time+"m)").then(function(views){
-            influxQuery("select mean(status) from road_"+id+" where status>0 and status<6 and time > '"+start_date+"' and time < '"+end_date+"' group by time("+group_by_time+"m)").then(function(status){
-                deferred.resolve(merge(views,status, angular.copy(date_template)))
+        influxQuery("select avg_traffic from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"'  ").then(function(data){
+                deferred.resolve(merge(data,angular.copy(date_template)))
             })
-        })
         return deferred.promise
     } 
 
     function influxQuery(query){
         var deferred = $q.defer();
-        influxdb.query(query+"order asc").then(function(results){
+        influxdbmin.query(query+"order asc").then(function(results){
             deferred.resolve(results[0].points)
         })
         return deferred.promise
     }
 
     function changeStrokeWidth(id, val){
-        console.log("width: "+val)
+        //console.log("width: "+val)
         var width = val == -1? 1.5 : val/2
         $('.'+id).css('stroke-width',width)
     }
 
     function changeStrokeColor(id, val){
-        console.log("color: "+val)
+        //console.log("color: "+val)
         // var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
         //$('.'+id).css('stroke', color)    
         if(val != -1)
@@ -237,17 +237,14 @@ angular.module('customVisulizationApp')
     		if(road.data){
                 printDate(road.data[index][0])
                 // changeStrokeWidth(road.road_id,road.data[index][1])
-                changeStrokeColor(road.road_id,road.data[index][2])
+                changeStrokeColor(road.road_id,road.data[index][1])
             }
     	})
     }
 
-    function merge(arr1, arr2, obj){
+    function merge(arr1, obj){
         arr1.forEach(function(a){
-            obj[a[0]][1] = a[1]
-        })
-        arr2.forEach(function(a){
-            obj[a[0]][2] = a[1]-1
+            obj[a[0]][1] = a[2]
         })
 
         var merged_arr = $.map(obj, function(value, index) {
@@ -298,10 +295,21 @@ angular.module('customVisulizationApp')
         var end_date = new Date(end)
         while(d<= end_date){
             var ms = d.getTime()
-            obj[ms]=[ms, -1, -1]
+            obj[ms]=[ms, -1]
             d.setMinutes(d.getMinutes()+diff)
         }
         return obj
     }  
+      
+      // 0:red, 2:orange, 4:yellow, 6:light green, 8:dark green
 
 })
+
+
+
+
+// to do list:
+
+// get data url from karim.
+// update the getdata function, get the real data..
+// plot in day chart..
