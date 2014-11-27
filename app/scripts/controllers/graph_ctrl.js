@@ -29,14 +29,17 @@ angular.module('customVisulizationApp')
  	var date = d3.select(".graph").append("div")
         .attr("class", "date");
 
-    var start_date = '2013-05-13'
+    var start_date = '2013-06-13'
     var end_date = '2014-05-10'
+    
+    var cell_st_date = new Date('2013-06-01');
+    
     var group_by_time = 1440
     var date_template = setDateTemplate(start_date, end_date, group_by_time)
     var date_template_length =Object.keys(date_template).length
 
     var time_index= 0
-    var speed= 1000
+    var speed= 500
     var interval_running = false
     var interval_promise= null
 
@@ -117,12 +120,17 @@ angular.module('customVisulizationApp')
 		    .data(force.links())
 		  	.enter().append("svg:path")
 		    .attr("class", function(d){
-		    	return "link "+d.road_id
+		    	return "link " + d.road_id
 		    })
 		    .attr("id", function(d, i){
 				return "l_"+i
 			})
-		    .attr("marker-end", "url(#end)");
+		    .attr("marker-end", "url(#end)")
+		    .on('click', function(d, i){
+		    	console.log(d.road_id + " is Selected");
+		    	getDataFor("road_"+d.road_id, true);
+		    	selectRoad(d.road_id);
+		    });
 
 	    var linktext = svg.append("svg:g")
 	    	.selectAll("g.linklabelholder")
@@ -131,13 +139,19 @@ angular.module('customVisulizationApp')
      		.append("text")
 	     	.attr("class", "linklabel")
 		 	.style("font-size", "6px")
-		 	.style("font-weight", "200")
+		 	.style("font-weight", "300")
+		 	.style("cursor", "pointer")
 	     	.attr("x", function(d){
 	     		return Math.abs(x(((d.target.x - d.source.x)/4)-20))
 	     	})
 		 	.attr("dy", "-5")
 	     	.attr("text-anchor", "start")
 		   	.style("fill","#000")
+		   	.on('click', function(d, i){
+		    	console.log(d.road_id + " is Selected");
+		    	getDataFor("road_"+d.road_id, true);
+		    	selectRoad(d.road_id);
+		    });
 
 	   	var linktextpath = linktext
 		 	.append("textPath")
@@ -171,7 +185,7 @@ angular.module('customVisulizationApp')
 			.text( function(d) { return d.title} )
 			.attr("x", function(d){return x(d.x)}) 
 			.attr("y", function(d){return y(d.y)}) 
-
+			
 		function tick() {
 		    path.attr("d", function(d) {
 		        var dx = x(d.target.x - d.source.x),
@@ -198,9 +212,10 @@ angular.module('customVisulizationApp')
 	function getData(id, start_date, end_date, group_by_time){
         var deferred = $q.defer();
         influxQuery("select avg_traffic from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"'").then(function(avg_traffic){
-            influxQuery("select total_reports from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"'").then(function(total_reports){
-                deferred.resolve(merge(avg_traffic, total_reports, angular.copy(date_template)))
-            })
+            // influxQuery("select total_reports from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"'").then(function(total_reports){
+                // deferred.resolve(merge(avg_traffic, total_reports, angular.copy(date_template)))
+                deferred.resolve(merge(avg_traffic, angular.copy(date_template)))
+            // })
         })
         return deferred.promise
     } 
@@ -220,7 +235,7 @@ angular.module('customVisulizationApp')
     }
 
     function changeStrokeColor(id, val){
-        console.log("color: "+val)
+        // console.log("color: "+val)
         // var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
         //$('.'+id).css('stroke', color)    
         if(val != -1)
@@ -229,7 +244,12 @@ angular.module('customVisulizationApp')
     }
 
     function printDate(val){
-        date.text(new Date(val))
+    	var d = new Date(val)
+    	var prev_d = new Date(val);
+    	prev_d.setDate(prev_d.getDate() - 1)
+        date.text(d);
+        $('rect[data-date^="' + prev_d.toUTCString() + '"]').show();
+        $('rect[data-date^="' + d.toUTCString() + '"]').hide();
     }
 
     function animateRoads(roads, index){
@@ -237,18 +257,18 @@ angular.module('customVisulizationApp')
     		if(road.data){
                 printDate(road.data[index][0])
                 // changeStrokeWidth(road.road_id,road.data[index][1])
-                changeStrokeColor(road.road_id,road.data[index][2])
+                changeStrokeColor(road.road_id,road.data[index][1])
             }
     	})
     }
 
-    function merge(arr1, arr2, obj){
+    function merge(arr1, obj){
         arr1.forEach(function(a){
             obj[a[0]][1] = a[2]
         })
-        arr2.forEach(function(a){
-            obj[a[0]][2] = a[2]
-        })
+        // arr2.forEach(function(a){
+            // obj[a[0]][2] = a[2]
+        // })
 
         var merged_arr = $.map(obj, function(value, index) {
             return [value];
@@ -298,15 +318,16 @@ angular.module('customVisulizationApp')
         var end_date = new Date(end)
         while(d<= end_date){
             var ms = d.getTime()
-            obj[ms]=[ms, -1, -1]
+            // obj[ms]=[ms, -1, -1]
+            obj[ms]=[ms, -1]
             d.setMinutes(d.getMinutes()+diff)
         }
         return obj
     }  
-	
+		
 	// START Calender
+	var cal = new CalHeatMap();
 	function setupCalender(data){
-		var cal = new CalHeatMap();
 		cal.init({
 			itemSelector: "#onClick-a",
 			domain: "month",
@@ -322,7 +343,14 @@ angular.module('customVisulizationApp')
 			// highlight: select_range(new Date(2014, 3, 14), new Date(2014, 5, 14)),
 			onClick: click_day,
 			data: data,
-			legend: [1, 2, 3, 4, 5]
+			legend: [1, 2, 3, 4, 5],
+			onComplete: function(){
+				var cells = $(".graph-rect");
+				$(".graph-rect").each(function( index ) {
+				  $(this).attr("data-date", cell_st_date.toUTCString());
+				  cell_st_date.setDate(cell_st_date.getDate() + 1);
+				});
+			}
 		});
 	}
 	
@@ -351,25 +379,45 @@ angular.module('customVisulizationApp')
 	 	return selected_list;
 	}
 	
-	var url = "http://54.173.41.125:8086/db/bey2ollak_day/series?u=root&p=root&q=select%20*%20from%20road_all%20order%20asc";
-	$.ajax({
-			url: url,
-			type: "GET",
-			success: function(data, status, xhr){
-						alert("Success");
-						var time_idx = data[0].columns.indexOf("time")
-						var avg_traffic_idx = data[0].columns.indexOf("avg_traffic")
-						var points = data[0].points;
-						var stats = {};
-						for (var d in points) {
-							stats[points[d][time_idx]/1000] = points[d][avg_traffic_idx];
-						}
-						setupCalender(stats);
-				},
-			error: function (xhr, status, error) {
-					alert(status + " - " + error);
-				}
-		});
+	var current_selected_road_id = null;
+	function getDataFor(db_name, update){
+		var url = "http://54.173.41.125:8086/db/bey2ollak_day/series?u=root&p=root&q=select%20avg_traffic%20from%20" + db_name + "%20order%20asc";
+		$.ajax({
+				url: url,
+				type: "GET",
+				success: function(data, status, xhr){
+							var time_idx = data[0].columns.indexOf("time")
+							var avg_traffic_idx = data[0].columns.indexOf("avg_traffic")
+							var points = data[0].points;
+							var stats = {};
+							for (var d in points) {
+								stats[points[d][time_idx]/1000] = points[d][avg_traffic_idx];
+							}
+							if(update)
+								cal.update(stats)
+							else
+								setupCalender(stats);
+					},
+				error: function (xhr, status, error) {
+						console.log(status + " - " + error);
+					}
+			});
+	}
+	
+	function selectRoad(id){
+		if(current_selected_road_id){
+			$('.'+current_selected_road_id).css('stroke-width',"2px");
+			current_selected_road_id = id;
+			$('.'+id).css('stroke-width',"4px");
+		}else{
+			current_selected_road_id = id;
+			$('.'+id).css('stroke-width',"4px");
+		}
+	}
+	
+	$(function(){
+		getDataFor("road_all", false);
+	})
 	
 	// END Calender  
 
