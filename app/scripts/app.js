@@ -54,6 +54,10 @@
         url:'/graph',
         templateUrl: 'views/graph.html',
         controller: 'graphCtrl'
+      }).state('cache', {
+        url:'/cache',
+        templateUrl: 'views/cache.html',
+        controller: 'cacheCtrl'
       })
   })
 
