@@ -6,7 +6,6 @@
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'elasticsearch',
   'highcharts-ng',
   // 'ui.bootstrap',
 ])

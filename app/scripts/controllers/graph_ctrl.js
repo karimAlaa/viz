@@ -29,14 +29,14 @@ angular.module('customVisulizationApp')
  	var date = d3.select(".graph").append("div")
         .attr("class", "date");
 
-    var start_date = '2013-06-24'
-    var end_date = '2013-07-01'
-    var group_by_time = 10
+    var start_date = '2013-05-13'
+    var end_date = '2014-05-10'
+    var group_by_time = 1440
     var date_template = setDateTemplate(start_date, end_date, group_by_time)
     var date_template_length =Object.keys(date_template).length
 
     var time_index= 0
-    var speed= 200
+    var speed= 1000
     var interval_running = false
     var interval_promise= null
 
@@ -197,9 +197,9 @@ angular.module('customVisulizationApp')
 
 	function getData(id, start_date, end_date, group_by_time){
         var deferred = $q.defer();
-        influxQuery("select count(status) from road_"+id+" where status=0 and time > '"+start_date+"' and time < '"+end_date+"' group by time("+group_by_time+"m)").then(function(views){
-            influxQuery("select mean(status) from road_"+id+" where status>0 and status<6 and time > '"+start_date+"' and time < '"+end_date+"' group by time("+group_by_time+"m)").then(function(status){
-                deferred.resolve(merge(views,status, angular.copy(date_template)))
+        influxQuery("select avg_traffic from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"'").then(function(avg_traffic){
+            influxQuery("select total_reports from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"'").then(function(total_reports){
+                deferred.resolve(merge(avg_traffic, total_reports, angular.copy(date_template)))
             })
         })
         return deferred.promise
@@ -244,10 +244,10 @@ angular.module('customVisulizationApp')
 
     function merge(arr1, arr2, obj){
         arr1.forEach(function(a){
-            obj[a[0]][1] = a[1]
+            obj[a[0]][1] = a[2]
         })
         arr2.forEach(function(a){
-            obj[a[0]][2] = a[1]-1
+            obj[a[0]][2] = a[2]
         })
 
         var merged_arr = $.map(obj, function(value, index) {
@@ -303,5 +303,74 @@ angular.module('customVisulizationApp')
         }
         return obj
     }  
+	
+	// START Calender
+	function setupCalender(data){
+		var cal = new CalHeatMap();
+		cal.init({
+			itemSelector: "#onClick-a",
+			domain: "month",
+			subDoman: "day",
+			cellSize: 20,
+			subDomainTextFormat: "%d",
+			range: 12,
+			displayLegend: "false",
+			start: new Date(2013, 5),
+			minDate: new Date(2013, 5),
+			maxDate: new Date(2014, 4),
+			weekStartOnMonday: false,
+			// highlight: select_range(new Date(2014, 3, 14), new Date(2014, 5, 14)),
+			onClick: click_day,
+			data: data,
+			legend: [1, 2, 3, 4, 5]
+		});
+	}
+	
+	function click_day(date, nb){
+		var first = date.getDate() - date.getDay();
+		var last = first + 6;
+		var firstday = new Date(date.setDate(first));
+		var lastday = new Date(date.setDate(last));
+		var format = d3.time.format("%Y-%m-%d %H:%M:%S");
+		$("#onClick-placeholder").html(
+			"first Date:" + format(firstday) + "<br/>" +
+			"last Date:" + format(lastday) + "<br/>" +
+			"Val:" + nb
+		);
+		// Call Bahia code to display the week 
+	}
+	
+	// mark the given range
+	function select_range(st_date, end_date){
+		var selected_list = [];
+	 	var start_sel = (st_date).getTime();
+	 	var days = d3.time.days(st_date, end_date).length;
+	 	for(var i = 0; i < days; i++){
+	 		selected_list.push(new Date(start_sel + (i * 1000 * 60 * 60 * 24)) );
+	 	}
+	 	return selected_list;
+	}
+	
+	var url = "http://54.173.41.125:8086/db/bey2ollak_day/series?u=root&p=root&q=select%20*%20from%20road_all%20order%20asc";
+	$.ajax({
+			url: url,
+			type: "GET",
+			success: function(data, status, xhr){
+						alert("Success");
+						var time_idx = data[0].columns.indexOf("time")
+						var avg_traffic_idx = data[0].columns.indexOf("avg_traffic")
+						var points = data[0].points;
+						var stats = {};
+						for (var d in points) {
+							stats[points[d][time_idx]/1000] = points[d][avg_traffic_idx];
+						}
+						setupCalender(stats);
+				},
+			error: function (xhr, status, error) {
+					alert(status + " - " + error);
+				}
+		});
+	
+	// END Calender  
 
 })
