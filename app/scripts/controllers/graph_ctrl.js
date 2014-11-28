@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('customVisulizationApp')
-  .controller('graphCtrl', function ($scope, statistics, util, influxdb, $q, $interval) {
+  .controller('graphCtrl', function ($scope, statistics, util, influxdbday, $q, $interval) {
  
     var graph = 'data.json'
 	
@@ -11,7 +11,10 @@ angular.module('customVisulizationApp')
     var res = JSON.parse(request.responseText)
     var roads = res.links;
 	var nodes_roads = buildNodesRoads(res);
-	
+	$scope.road=false
+    $scope.startofweek=""
+    $scope.endofweek=""
+      
 	var width = 1400,
     	height = 610;
 
@@ -48,25 +51,25 @@ angular.module('customVisulizationApp')
 	roads.forEach(function(road){
 		getData(road.road_id, start_date, end_date, group_by_time).then(function(data){
             road.data = data
-            console.log(road)
+            //console.log(road)
        	})
 	})       
 
     shortcut.add("Enter",function() {
         if(interval_running){
-            console.log("stop")
+            //console.log("stop")
             $interval.cancel(interval_promise)
             interval_running = false
         }
         else{
-            console.log("start")
+            //console.log("start")
             interval_running = true
             interval_promise= $interval(function(){
                 animateRoads(roads, time_index)
                 showRoadWithStatus(current_selected_status)
                 time_index++
                 if(time_index>date_template_length-1){
-                    console.log("done")
+                    //console.log("done")
                     $interval.cancel(interval_promise)
                     interval_running = false
                     time_index = 0
@@ -130,7 +133,7 @@ angular.module('customVisulizationApp')
 			})
 		    .attr("marker-end", "url(#end)")
 		    .on('click', function(d, i){
-		    	console.log(d.road_id + " is Selected");
+		    	//console.log(d.road_id + " is Selected");
 		    	getDataFor("road_"+d.road_id, true);
 		    	selectRoad(d.road_id);
 		    });
@@ -154,7 +157,7 @@ angular.module('customVisulizationApp')
 	     	.attr("text-anchor", "start")
 		   	.style("fill","#000")
 		   	.on('click', function(d, i){
-		    	console.log(d.road_id + " is Selected");
+		    	//console.log(d.road_id + " is Selected");
 		    	getDataFor("road_"+d.road_id, true);
 		    	selectRoad(d.road_id);
 		    });
@@ -231,14 +234,14 @@ angular.module('customVisulizationApp')
 
     function influxQuery(query){
         var deferred = $q.defer();
-        influxdb.query(query+"order asc").then(function(results){
+        influxdbday.query(query+"order asc").then(function(results){
             deferred.resolve(results[0].points)
         })
         return deferred.promise
     }
 
     function changeStrokeWidth(id, val){
-        console.log("width: "+val)
+        //console.log("width: "+val)
         var width = val == -1? 1.5 : val/2
         $('.'+id).css('stroke-width',width)
     }
@@ -366,6 +369,7 @@ angular.module('customVisulizationApp')
 	}
 	
 	function click_day(date, nb){
+        console.log( $scope.road);
 		var first = date.getDate() - date.getDay();
 		var last = first + 6;
 		var firstday = new Date(date.setDate(first));
@@ -387,8 +391,13 @@ angular.module('customVisulizationApp')
 			}
 		}
 		// End: Move the animation to the first day of this week 
-		
+		console.log("here now");
 		// Call Bahia code to display the week 
+        $scope.startofweek= format(firstday)
+        $scope.endofweek= format(lastday)
+        $scope.road="all"
+        console.log( $scope.road);
+        $scope.safeApply();
 	}
 	
 	// mark the given range
@@ -438,6 +447,8 @@ angular.module('customVisulizationApp')
 			current_selected_road_id = id;
 			$('.'+id).css('stroke-width',"4px");
 		}
+        $scope.road= id;
+        $scope.safeApply();
 	}
 	
 	$(function(){
@@ -504,3 +515,4 @@ angular.module('customVisulizationApp')
 	// ----- END Calender -----  
 
 })
+

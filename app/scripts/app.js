@@ -8,7 +8,19 @@
   'ui.router',
   'highcharts-ng',
   // 'ui.bootstrap',
-])
+]).run(['$http', '$rootScope',
+        function($http, $rootScope) {
+            $rootScope.safeApply = function(fn) {
+                var phase = this.$root.$$phase;
+                if(phase == '$apply' || phase == '$digest') {
+                    if(fn && (typeof(fn) === 'function')) {
+                        fn();
+                    }
+                } else {
+                    this.$apply(fn);
+                }
+            };
+      }])
   .config(function ($stateProvider, $urlRouterProvider) {
     //delete $httpProvider.defaults.headers.common['X-Requested-With'];
     
