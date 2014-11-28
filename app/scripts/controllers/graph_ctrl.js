@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('customVisulizationApp')
-  .controller('graphCtrl', function ($scope, statistics, util, influxdbmin, $q, $interval) {
+  .controller('graphCtrl', function ($scope, statistics, util, influxdbmin, $q, $interval, influxdbday) {
  
     var graph = 'data.json'
 
@@ -208,10 +208,7 @@ angular.module('customVisulizationApp')
 
 	});
 
-
-
-	function getData(id, start_date, end_date, group_by_time){
-       
+	function getData(id, start_date, end_date, group_by_time){       
         var deferred = $q.defer();
         influxQuery("select avg_traffic from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"'  ").then(function(data){
                 deferred.resolve(merge(data,angular.copy(date_template)))
@@ -226,6 +223,7 @@ angular.module('customVisulizationApp')
         })
         return deferred.promise
     }
+
 
     function changeStrokeWidth(id, val){
         //console.log("width: "+val)
@@ -411,6 +409,41 @@ angular.module('customVisulizationApp')
 			current_selected_road_id = id;
 			$('.'+id).css('stroke-width',"4px");
 		}
+	}
+
+	function calculateRoadTags(){
+		influxdbday.query('select sum("7") from /road_*/').then(function(danger){
+            var roads = {}
+            // var sum = 0
+            // danger.forEach(function(road){
+            // 	if(road.name != "road_all"){
+            // 		sum+=road.points[0][1]
+            // 	}            		
+            // })
+            // var danger_avg =Math.ceil(sum/(danger.length-1))
+            // console.log(danger_avg)
+            var danger_threshold = 10
+            danger.forEach(function(road){
+        		if(road.name != "road_all")
+            		roads[road.name] = (road.points[0][1] > danger_threshold)? {"security":1} : {"security":0}
+            })
+
+            influxdbday.query('select count(avg_traffic) from /road_*/ where avg_traffic >=4').then(function(traffic){
+        	 	// var sum = 0
+           //  	traffic.forEach(function(road){
+	          //   	if(road.name != "road_all"){
+	          //   		sum+=road.points[0][1]
+	          //   	}            		
+	          //   })
+	          //   var traffic_avg =Math.ceil(sum/(traffic.length-1))
+	          //   console.log(traffic_avg)
+	          	var traffic_threshold = 20
+	            traffic.forEach(function(road){
+        			if(road.name != "road_all")
+        				roads[road.name]["planning"] = (road.points[0][1] > traffic_threshold)? 1 : 0
+	            })
+            })
+        })
 	}
 	
 	$(function(){
