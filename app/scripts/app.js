@@ -59,6 +59,11 @@
         templateUrl: 'views/cache.html',
         controller: 'cacheCtrl'
       })
+      .state('cooccurrence', {
+        url:'/cooccurrence',
+        templateUrl: 'views/cooccurrence.html',
+        controller: 'cooccurrenceCtrl'
+      })
   })
 
 
