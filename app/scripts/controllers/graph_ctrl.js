@@ -2,6 +2,40 @@
 
 angular.module('customVisulizationApp')
   .controller('graphCtrl', function ($scope, statistics, util, influxdb, $q, $interval) {
+
+  	/* 
+  	 * UI Initialization
+	 */
+
+	 $(document).ready(function(){
+	 	//$("#sidePanelContent").css("width", "0px");
+	 	var offset = $("#sidePanelCloser").offset();
+	 	var screenWidth = $(window).width();
+	 	var btnWidth = $('#sidePanelCloser').width();
+
+	 	var location = -(screenWidth - offset.left - btnWidth);
+
+	 	$('#sidePanelCloser').css("right", location + "px")
+	 	$('#sidePanelCloser').on('click',function(){
+	 		var currentOffset = $("#sidePanelCloser").offset();
+	 		var currentLocation = -(screenWidth - currentOffset.left - btnWidth);
+
+	 		console.log("Locations: " + currentLocation + " / " + location)
+
+	 		if(currentLocation != location) {
+	 			$('#sidePanelCloser').animate({ right: "0" }, 1000)
+	 			$('#sidePanelCloser span').removeClass("glyphicon glyphicon-chevron-left");
+	 			$('#sidePanelCloser span').addClass("glyphicon glyphicon-chevron-right");
+	 		} else {
+	 			$('#sidePanelCloser').animate( { right: location + "px" }, 1000)
+	 			$('#sidePanelCloser span').removeClass("glyphicon glyphicon-chevron-right");
+	 			$('#sidePanelCloser span').addClass("glyphicon glyphicon-chevron-left");
+	 		}
+
+	        $('#sidePanelContent').toggle("slide", {direction:'right'}, 1000);
+	    });
+	 })
+
  
     var graph = 'data.json'
 

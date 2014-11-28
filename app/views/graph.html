@@ -111,11 +111,114 @@
 	      	}
 	      	
       	/* Calender CSS*/
+
+  body {
+  	position: relative;
+  }
+
+  #viewSwitcher {
+		margin-right: 0;
+	}
+
+	#trafficFlowFiltration {
+		width: 40px;
+		height: 250px;
+		background: #BDC3C7;
+		position: absolute;
+		top: 100px;
+		left: 15px;
+		border-radius: 5px;
+	}
+
+	#sidePanel {
+		overflow-y: scroll;
+		position: absolute;
+		top: 100px;
+		right: -15px;
+	}
+
+	#sidePanelCloser {
+		background: #BDC3C7;
+		padding: 3px;
+		text-align: center;
+		cursor:pointer;
+    position: relative;
+    right: 0;
+    top:0;
+    border-radius: 5px 0 0 5px;
+    color: #2C3E50;
+	}
+
+	#sidePanelContent {
+		background: #BDC3C7;
+		height: 400px;
+		display:none;
+		border-radius: 0 0 0 5px;
+	}
+
+	#animationControls {
+		position: absolute;
+		bottom: 60px;
+		left: 45%;
+		width: 118px;
+	}
+
+	#calendarView {
+		padding: 10px;
+		background: #ECF0F1;
+		border-top: 1px solid #BDC3C7;
+	}
+
 </style>
 
+<div class="container-fluid">
+	
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="mainNav">
+
+		    <div class="navbar-header">
+		      <a class="navbar-brand" href="#">
+		        Park
+		      </a>
+		    </div>
+
+		    <form class="navbar-form navbar-right" id="viewSwitcher">
+		    	<div class="btn-group" role="group" aria-label="...">
+				  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-road"></span></button>
+				  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+				</div>
+		    </form>
+
+		</nav>
+
+		<div id="trafficFlowFiltration">
+			
+		</div>
+
+		<div id="sidePanel" class="col-md-3">
+				<div class="col-md-1" id="sidePanelCloser"><span class="glyphicon glyphicon-chevron-left"></span></div>
+				<div class="col-md-11" id="sidePanelContent"></div>
+		</div>
+
+		<div id="animationControls">
+			<form class="form-inline" id="viewSwitcher">
+				<div class="form-group">
+		    	<div class="btn-group" role="group" aria-label="...">
+					  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></button>
+					  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-play"></span></button>
+					  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></button>
+					</div>
+				</div>
+		   </form>
+		</div>
+
+		<nav class="nav-bar navbar-default navbar-fixed-bottom" id="calendarView">
+
+			<div id="onClick-a" align="center">
+				<div id="cal-heatmap"></div>
+				<span id="onClick-placeholder"></span>
+			</div>
+		</nav>
+	</div>
+
 <div class="graph"></div>
-<br />
-<div id="onClick-a" align="center">
-	<div id="cal-heatmap"></div>
-	<span id="onClick-placeholder"></span>
-</div>
+
