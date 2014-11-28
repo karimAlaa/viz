@@ -219,7 +219,7 @@ angular.module('customVisulizationApp')
 			icons.append("image").attr("xlink:href",security_icon)
 		    .attr("width", 24).attr("height", 24)
 		    .style("cursor", "pointer")
-        	// .style("display", "none")
+            .style("display", "none")
         	.attr("class", function(d){
         		return "roads_icons icon_" + d.road_id;
         	})
@@ -541,7 +541,7 @@ angular.module('customVisulizationApp')
                     console.log(id);
                     changeStrokeColor(id,6)    
                     changeStrokeWidth(id,10)
-                    $(".roads_icons").hide();
+                    //$(".roads_icons").hide();
                     $(".icon_" + id).show();
                     $(".icon_" + id).attr("href", security_icon);
                 }
@@ -758,6 +758,8 @@ angular.module('customVisulizationApp')
 	}
 
 	function BahiaWork(road_id){
+        $scope.chartid=road_id;
+        $scope.safeApply();
 		console.log("Bahia Work: " + road_id);
 	}
 

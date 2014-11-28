@@ -12,15 +12,30 @@ angular.module('customVisulizationApp')
                 name:'=',
                 label:'@',
                 probability: '=',
+                roadid:'='
 			},
 			link: function(scope, element){
+                
+                scope.$watch('roadid', function(newval){
+                    console.log("IN EATCH");
+                    if(scope.roadid)  
+                    {
+                        console.log("getting chart");
+                        scope.getchart(scope.roadid);
+                    }
+                  }
+                 );
+                
                 console.log(scope.probability);
                 console.log("datatype issss");
                 console.log(scope.dataType);
                 //scope.influx = {'min': influxdbmin, 'hour': influxdbhour}
                 //console.log(scope.influx);
                 scope.influx = {'min': influxdbmin, 'hour': influxdbhour, 'day': influxdbday, 'month':influxdbday}
-                var id="216";
+                
+                //var id="216";
+                
+                // all the data
                 var start_date='2013-06-13 22:00:00';
                 var end_date='2014-05-10 22:00:00';
                 
@@ -101,7 +116,7 @@ angular.module('customVisulizationApp')
                         else{
                             gran="month"
                         }
-                        getData(id, getInfluxDate(e.min), getInfluxDate(e.max), gran).then(function(data){
+                        getData(scope.roadid, getInfluxDate(e.min), getInfluxDate(e.max), gran).then(function(data){
                             if(gran!="month")
                             {
                                 data[0].points.forEach(function(a){
@@ -150,6 +165,8 @@ angular.module('customVisulizationApp')
                 }
                 
                 
+                scope.getchart = function(id)
+                {
                 getData(id,start_date, end_date, "month").then(function(data){
                     
                     console.log("pointsssss");
@@ -269,6 +286,7 @@ angular.module('customVisulizationApp')
                       
                       
                     })
+                }
                 
             }
         }
