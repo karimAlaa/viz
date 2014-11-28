@@ -402,8 +402,8 @@ angular.module('customVisulizationApp')
 		// End: Move the animation to the first day of this week 
 		console.log("here now");
 		// Call Bahia code to display the week 
-        $scope.startofweek= format(firstday)
-        $scope.endofweek= format(lastday)
+        $scope.startofweek= formatweek1(firstdayw)
+		$scope.endofweek= formatweek2(lastdayw)
         console.log( $scope.road);
         $scope.safeApply();
 	}
