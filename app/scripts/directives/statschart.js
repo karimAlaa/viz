@@ -17,11 +17,13 @@ angular.module('customVisulizationApp')
 			link: function(scope, element){
                 
                 scope.$watch('roadid', function(newval){
-                    console.log("IN EATCH");
+                    console.log("IN WATCH");
                     if(scope.roadid)  
                     {
+                        //$('#chart'+scope.id).html("");
                         console.log("getting chart");
-                        scope.getchart(scope.roadid);
+                        //angular.element(document.getElementById("chart"+scope.id)).highcharts().destroy();
+                        scope.getchart();
                     }
                   }
                  );
@@ -165,9 +167,10 @@ angular.module('customVisulizationApp')
                 }
                 
                 
-                scope.getchart = function(id)
+                scope.getchart = function()
                 {
-                getData(id,start_date, end_date, "month").then(function(data){
+                    
+                getData(scope.roadid,start_date, end_date, "month").then(function(data){
                     
                     console.log("pointsssss");
                       console.log(data[0].points);
@@ -206,8 +209,9 @@ angular.module('customVisulizationApp')
                      //console.log("in chart");
                      //console.log(scope.results[7]);
                         console.log("minnnn");
-                    console.log(series[0]['data']);
-                      scope.chartConfig = {
+                        console.log(series[0]['data']);
+                        scope.chartConfig=null;
+                        scope.chartConfig = {
                               options: {
                                 chart: {
                                     type: 'line',
@@ -281,6 +285,7 @@ angular.module('customVisulizationApp')
                           
                       }
                       
+                     
                       
                       // on zoom get per hour instead of day.
                       
