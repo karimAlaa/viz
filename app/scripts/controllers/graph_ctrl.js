@@ -381,8 +381,11 @@ angular.module('customVisulizationApp')
     	var d = new Date(val)
     	current_day = d;
     	var prev_d = new Date(val);
+    	var next_d = new Date(val);
     	prev_d.setDate(prev_d.getDate() - 1)
+    	next_d.setDate(next_d.getDate() + 1)
         // date.text(d);
+        $('rect[data-date^="' + next_d.toUTCString() + '"]').show();
         $('rect[data-date^="' + prev_d.toUTCString() + '"]').show();
         $('rect[data-date^="' + d.toUTCString() + '"]').hide();
     }
