@@ -326,7 +326,7 @@ angular.module('customVisulizationApp')
 	  	    });
 	  	    
 	  	    icons.attr("transform", function(d) {
-            	return "translate(" +((d.target.x+d.source.x)/2) + "," + ((d.target.y+d.source.y))/2 + ")";
+            	return "translate(" + d3.event.translate+ ") scale(" + d3.event.scale + ")";
     		});
 		  	    
 		}
@@ -381,12 +381,9 @@ angular.module('customVisulizationApp')
     	current_day = d;
     	var prev_d = new Date(val);
     	prev_d.setDate(prev_d.getDate() - 1)
-        date.text(d);
+        // date.text(d);
         $('rect[data-date^="' + prev_d.toUTCString() + '"]').show();
-        //$('rect[data-date^="' + d.toUTCString() + '"]').hide();
-        //$('rect[data-date^="' + prev_d.toUTCString() + '"]').animate({ fill: "#34495E" });
-        $('rect[data-date^="' + d.toUTCString() + '"]').css("fill", "#34495E");
-
+        $('rect[data-date^="' + d.toUTCString() + '"]').hide();
     }
 
     function animateRoads(roads, index){
@@ -541,7 +538,6 @@ angular.module('customVisulizationApp')
                     console.log(id);
                     changeStrokeColor(id,6)    
                     changeStrokeWidth(id,10)
-                    //$(".roads_icons").hide();
                     $(".icon_" + id).show();
                     $(".icon_" + id).attr("href", security_icon);
                 }
