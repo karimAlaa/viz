@@ -8,18 +8,23 @@ angular.module('customVisulizationApp')
 	 */
 
 	 $(document).ready(function(){
+
+	 	$("statschart#1").hide();
+	 	$("statschart#2").hide();
+	 	$("statschart#3").hide();
+
 	 	$('[data-toggle="tooltip"]').tooltip()
 	 	
 	 	var offset = $("#sidePanelCloser").offset();
 	 	var screenWidth = $(window).width();
 	 	var btnWidth = $('#sidePanelCloser').width();
 
-	 	var location = -(screenWidth - offset.left - btnWidth);
+	 	var location = -(screenWidth - offset.left - btnWidth + 3);
 
 	 	$('#sidePanelCloser').css("right", location + "px")
 	 	$('#sidePanelCloser').on('click',function(){
 	 		var currentOffset = $("#sidePanelCloser").offset();
-	 		var currentLocation = -(screenWidth - currentOffset.left - btnWidth);
+	 		var currentLocation = -(screenWidth - currentOffset.left - btnWidth + 3);
 
 	 		if(currentLocation != location) {
 	 			$('#sidePanelCloser').animate({ right: "0" }, 1000)
@@ -35,14 +40,7 @@ angular.module('customVisulizationApp')
 	    });
 
 	    $('#playButton').on('click', function(){
-	    	$(this).children("span").each(function() {
-	    		if($(this).hasClass("glyphicon-play")) {
-		    		
-		    		startPauseAnimation();
-	    		} else {
-		    		startPauseAnimation();
-	    		}
-	    	});
+  			startPauseAnimation();
 	    })
 
 	    $('#backwardButton').on('click', function() {
@@ -54,6 +52,27 @@ angular.module('customVisulizationApp')
 	    })
 
 	 })
+
+	$scope.showSecurityCharts = function() {
+		if($('#securityButton').hasClass("active")) {
+			$('#securityButton').removeClass("active");
+		} else {
+			$('#securityButton').addClass("active");
+		}
+
+		$("statschart#1").toggle();
+	}
+
+	$scope.showPlanningCharts = function() {
+		if($('#planningButton').hasClass("active")) {
+			$('#planningButton').removeClass("active");
+		} else {
+			$('#planningButton').addClass("active");
+		}
+		
+		$("statschart#2").toggle();
+	 	$("statschart#3").toggle();
+	}
  
  	var Colors = ["darkgreen", "#2ECC71", "#F1C40F", "#F39C12", "#E74C3C"]
     var graph = 'data.json'

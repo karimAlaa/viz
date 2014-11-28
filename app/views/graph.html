@@ -227,26 +227,26 @@ text {
 	}
 
 	#sidePanelCloser {
-		background: #BDC3C7;
-		padding: 0;
+	background: #ECF0F1;
+		padding: 7px;
 		text-align: center;
 		cursor:pointer;
     position: relative;
     right: 0;
     top:0;
     border-radius: 5px 0 0 5px;
+    border: 1px solid #BDC3C7;
+    border-right: 1px solid #ECF0F1;
     color: #2C3E50;
-	}
-
-	#sidePanelCloser a.btn {
-		padding: 7px;
+    z-index: 1000;
 	}
 
 	#sidePanelContent {
-		background: #BDC3C7;
+		background: #ECF0F1;
 		height: 400px;
 		display:none;
 		border-radius: 0 0 0 5px;
+		border: 1px solid #BDC3C7;
 		overflow-y: scroll;
 		padding: 10px;
 	}
@@ -264,6 +264,14 @@ text {
 		border-top: 1px solid #BDC3C7;
 	}
 
+	daychart div#chart, statschart div {
+		margin: 0 auto 30px auto;
+	}
+
+	daychart div#chart {
+		background: #FFFFFF;
+	}
+
 </style>
 
 <div class="container-fluid">
@@ -278,8 +286,8 @@ text {
 
 		    <form class="navbar-form navbar-right" id="viewSwitcher">
 		    	<div class="btn-group" role="group" aria-label="...">
-				  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-road"></span></button>
-				  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+				  <button type="button" class="btn btn-primary" ng-click="showPlanningCharts();" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
+				  <button type="button" class="btn btn-primary" ng-click="showSecurityCharts();" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
 				</div>
 		    </form>
 
@@ -297,7 +305,7 @@ text {
 		</div>
 
 		<div id="sidePanel" class="col-md-6">
-				<div class="col-md-1" id="sidePanelCloser"><a class="btn"><span class="glyphicon glyphicon-chevron-left"></span></a></div>
+				<div class="col-md-1" id="sidePanelCloser"><span class="glyphicon glyphicon-chevron-left"></span></div>
 				<div class="col-md-11" id="sidePanelContent">
 					
 					<daychart road="road" startofweek="startofweek" endofweek="endofweek"></daychart>
