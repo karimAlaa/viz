@@ -15,7 +15,7 @@ angular.module('customVisulizationApp')
                 
                 
                 scope.$watchCollection('[showRoad,startofweek,endofweek]', function(newval){
-                    if(scope.showRoad)  
+                    if(scope.showRoad && scope.startofweek)  
                         scope.letsdothis();
                   }
                  );
@@ -30,9 +30,9 @@ angular.module('customVisulizationApp')
                   height = 430 - margin.top - margin.bottom,
                   gridSize = Math.floor(width / 24),
                   legendElementWidth = gridSize*2,
-                  buckets = 5,
+                  buckets = 6,
                   //colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
-                  colors= ['darkgreen', 'lightgreen', 'yellow', 'orange', 'red'],
+                  colors= ['white','darkgreen', 'lightgreen', 'yellow', 'orange', 'red'],
                   days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
                   times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12a"];
 
@@ -120,9 +120,10 @@ angular.module('customVisulizationApp')
         
             var setup = function(road)
             {
+                console.log(road)
             
           var colorScale = d3.scale.quantile()
-              .domain([0,1,2,3,4])
+              .domain([0,1,2,3,4,5])
               .range(colors);
          d3.select("#chart").select("svg").remove();
           var svg = d3.select("#chart").append("svg")
