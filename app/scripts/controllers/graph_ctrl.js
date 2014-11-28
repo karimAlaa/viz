@@ -55,9 +55,9 @@ angular.module('customVisulizationApp')
  
  	var security_icon = "/img/security.ico"
  	var planning_icon = "/img/planning.ico"
- 	
- 	var Colors = ["darkgreen", "#2ECC71", "#F1C40F", "#F39C12", "#E74C3C", "purple", "pink", "black"]
+ 	var Colors = ["purple", "pink", "black", "#FF0000", "#FF1900", "#FF2300", "#FF5F00", "#FF6E00", "#FF9100", "#FFA000", "#FFAF00", "#FFBE00", "#FFCD00", "#FFDC00", "#FFFF00", "#FAFF00", "#E1FF00", "#C3FF00", "#A5FF00", "#6EFF00", "#55FF00", "#2DFF00", "#0AFF00"].reverse();
     var graph = 'data.json'
+	var colorBase = 0.25;
 	
     var request = new XMLHttpRequest();
     request.open("GET", graph, false);
@@ -370,7 +370,9 @@ angular.module('customVisulizationApp')
         	//$('.'+id).css('stroke', hsv2rgb(Math.floor((4 - val) * 120 / 4), 0.8, 0.9))
 
         if(val != -1){
-        	$('.'+id).css('stroke', Colors[Math.floor(val)])
+        	$('.'+id).css('stroke', Colors[Math.floor(val/colorBase)])
+    	}else{
+    		$('.'+id).css('stroke', "#666")
     	}
 
     }
@@ -615,7 +617,7 @@ angular.module('customVisulizationApp')
 			// highlight: select_range(new Date(2014, 3, 14), new Date(2014, 5, 14)),
 			onClick: click_day,
 			data: data,
-			legend: [1, 2, 3, 4],
+			legend: [0.25, 0.5, 0.75, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5, 4.75],
 			onComplete: function(){
 				var cells = $(".graph-rect");
 				$(".graph-rect").each(function( index ) {
@@ -627,6 +629,7 @@ angular.module('customVisulizationApp')
 	}
 	
 	function click_day(date, nb){
+		var curr_day = new Date(date);
         console.log( $scope.road);
 		var first = date.getDate() - date.getDay();
 		var last = first + 6;
@@ -640,21 +643,23 @@ angular.module('customVisulizationApp')
 		var lastdayw = new Date(date.setDate(lastw));
         var formatweek1 = d3.time.format("%Y-%m-%d 22:00:00");
         var formatweek2 = d3.time.format("%Y-%m-%d 21:00:00");
-		$("#onClick-placeholder").html(
-			"first Date:" + format(firstday) + " | " +
-			"last Date:" + format(lastday) + " | " +
-			"Val:" + nb
-		);
+		// $("#onClick-placeholder").html(
+			// "first Date:" + format(firstday) + " | " +
+			// "last Date:" + format(lastday) + " | " +
+			// "Val:" + nb
+		// );
 		
-		// Start: Move the animation to the first day of this week
+		// Start: Move the animation to the current day
 		var times = Object.keys(date_template).sort();
 		for(var i = 0; i < times.length; i++){
-			if(parseInt(times[i]) > firstday.getTime()){
+			if(parseInt(times[i]) > curr_day.getTime()){
 				$("rect").show();
 				time_index = i;
 				break;
 			}
 		}
+		animateRoads(roads, time_index);
+		
 		// End: Move the animation to the first day of this week 
 		console.log("here now");
 		// Call Bahia code to display the week 
@@ -787,7 +792,7 @@ angular.module('customVisulizationApp')
 
 	function resetRoads(){
 		$(".link").css('stroke-width',"2px");
-		$(".link").css('stroke',"#000");
+		$(".link").css('stroke',"#666");
 	}
 
 	function BahiaWork(road_id){
