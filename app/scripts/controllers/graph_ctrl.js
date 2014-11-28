@@ -286,14 +286,12 @@ angular.module('customVisulizationApp')
 		    .data(force.nodes())
 		    .enter().append("g")
 		    .attr("class", function(d){
-		    	if(d.invisible)
-		    		return "node invisible"
-		    	else
-		    		return "node"
-		    })
-		    .attr("class", function(d){
-		    	return "node node_id_" + d.id;
-		    })
+		    	if(d.invisible){
+		    		return "node invisible node_id_" + d.id;
+		    	}else{
+		    		return "node node_id_" + d.id;
+		    	}
+		    });
 		    // .call(force.drag);
 
 		node.append("circle")
