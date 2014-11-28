@@ -4,12 +4,14 @@ angular.module('customVisulizationApp')
   .controller('graphCtrl', function ($scope, statistics, util, influxdb, $q, $interval) {
  
     var graph = 'data.json'
-
+	
     var request = new XMLHttpRequest();
     request.open("GET", graph, false);
     request.send(null)
-    var roads = JSON.parse(request.responseText).links;
-
+    var res = JSON.parse(request.responseText)
+    var roads = res.links;
+	var nodes_roads = buildNodesRoads(res);
+	
 	var width = 1400,
     	height = 610;
 
@@ -172,6 +174,9 @@ angular.module('customVisulizationApp')
 		    		return "node invisible"
 		    	else
 		    		return "node"
+		    })
+		    .attr("class", function(d){
+		    	return "node node_id_" + d.id;
 		    })
 		    // .call(force.drag);
 
@@ -454,6 +459,7 @@ angular.module('customVisulizationApp')
 		}
 		$("text").show();
 		$(".link").show();
+		$(".node").show();
 		roads.forEach(function(road){
 			if(road.data){
 				var road_status = road.data[current_idx][1];
@@ -463,6 +469,35 @@ angular.module('customVisulizationApp')
 				}
 			}
 		})
+		
+		// Hide un-needed nodes
+		$.each( nodes_roads, function( key, links ) {
+		  var hide = true;
+		  $.each(links, function( link_index, link ) {
+  				$.each($("."+link), function( link_index, elem ) {
+		  			if(elem.outerHTML.indexOf("display: none") == -1)
+		  				hide = false;
+  				}) 
+		  });
+		  if(hide)
+		  	$(".node_id_" + key).hide();
+		});
+	}
+	
+	// build a map to hold {node: [roads]}
+	function buildNodesRoads(g){
+		var m = {};
+		var n = g["nodes"];
+		var l = g["links"];
+		$.each(n, function( node_index, node ) {
+			var roads_list = [];
+			$.each(l, function( link_index, link ) {
+				if( (link.source == node.id || link.target == node.id) && roads_list.indexOf(link.road_id) == -1)
+					roads_list.push(link.road_id);
+			});
+			m[node.id] = roads_list;
+		});
+		return m;
 	}
 	
 	// ------------------------
