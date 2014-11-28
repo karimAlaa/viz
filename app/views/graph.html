@@ -54,6 +54,7 @@
 		color:#FFF;
 		/*border: 1px dashed #333;*/
 		fill: black;
+		background: #FFFFFF;
 	}	
 	.date {
         position: absolute;
@@ -169,6 +170,10 @@ text {
   	border: none;
   }
 
+  .navbar-brand img {
+  	width: 170px;
+  }
+
   #viewSwitcher {
 		margin-right: 0;
 	}
@@ -255,7 +260,7 @@ text {
 		position: absolute;
 		bottom: 250px;
 		left: 45%;
-		width: 118px;
+		width: 125px;
 	}
 
 	#calendarView {
@@ -279,15 +284,15 @@ text {
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="mainNav">
 
 		    <div class="navbar-header">
-		      <a class="navbar-brand" href="#">
-		        2allak
+		      <a class="navbar-brand" href="#/graph">
+		        <img src="../img/ba-logo.png" alt="">
 		      </a>
 		    </div>
 
 		    <form class="navbar-form navbar-right" id="viewSwitcher">
 		    	<div class="btn-group" role="group" aria-label="...">
-				  <button type="button" class="btn btn-primary" ng-click="showPlanningCharts();" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
-				  <button type="button" class="btn btn-primary" ng-click="showSecurityCharts();" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+				  <button type="button" class="btn btn-default" ng-click="showPlanningCharts();" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
+				  <button type="button" class="btn btn-default" ng-click="showSecurityCharts();" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
 				</div>
 		    </form>
 
