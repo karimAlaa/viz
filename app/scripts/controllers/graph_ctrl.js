@@ -52,29 +52,8 @@ angular.module('customVisulizationApp')
 	    })
 
 	 })
-
-	$scope.showSecurityCharts = function() {
-		if($('#securityButton').hasClass("active")) {
-			$('#securityButton').removeClass("active");
-		} else {
-			$('#securityButton').addClass("active");
-		}
-
-		$("statschart#1").toggle();
-	}
-
-	$scope.showPlanningCharts = function() {
-		if($('#planningButton').hasClass("active")) {
-			$('#planningButton').removeClass("active");
-		} else {
-			$('#planningButton').addClass("active");
-		}
-		
-		$("statschart#2").toggle();
-	 	$("statschart#3").toggle();
-	}
  
- 	var Colors = ["darkgreen", "#2ECC71", "#F1C40F", "#F39C12", "#E74C3C"]
+ 	var Colors = ["darkgreen", "#2ECC71", "#F1C40F", "#F39C12", "#E74C3C", "purple", "pink", "black"]
     var graph = 'data.json'
 	
     var request = new XMLHttpRequest();
@@ -242,9 +221,11 @@ angular.module('customVisulizationApp')
 		 	.style("font-weight", "300")
 		 	.style("cursor", "pointer")
 	     	.attr("x", function(d){
+                console.log("D IS!!");
+                console.log(d);
 	     		return Math.abs(x(((d.target.x - d.source.x)/4)-20))
 	     	})
-		 	.attr("dy", "-5")
+		 	//.attr("dy", "-5")
 	     	.attr("text-anchor", "start")
 		   	.style("fill","#000")
 		   	.on('click', function(d, i){
@@ -252,6 +233,22 @@ angular.module('customVisulizationApp')
 		    	getDataFor("road_"+d.road_id, true);
 		    	selectRoad(d.road_id);
 		    });
+        
+        
+//        var linkicons = svg.append("svg:image")
+//          .attr("xlink:href", "img/icons/sun.svg")
+//            .data(force.links())
+//          .attr("width", 40)
+//          .attr("height", 40)
+//          .attr("x", function(d){
+//	     		return Math.abs(x(((d.target.x - d.source.x)/4)-20))
+//	     	})
+//          .attr("y", function(d){
+//                console.log("D IS!!");
+//                console.log(d);
+//	     		return Math.abs(y(((d.target.y - d.source.y)/4)-20))
+//	     	})
+//          //.attr("y",53);
 
 	   	var linktextpath = linktext
 		 	.append("textPath")
@@ -365,7 +362,7 @@ angular.module('customVisulizationApp')
     	roads.forEach(function(road){
     		if(road.data){
                 printDate(road.data[index][0])
-                // changeStrokeWidth(road.road_id,road.data[index][1])
+                changeStrokeWidth(road.road_id,4)
                 changeStrokeColor(road.road_id,road.data[index][1])
             }
     	})
@@ -434,6 +431,114 @@ angular.module('customVisulizationApp')
         return obj
     }  
 		
+    //////// tags //////////
+      
+       
+	function calculateRoadTags(){
+        var deferred = $q.defer();
+		influxdbday.query('select sum("7") from /road_*/').then(function(danger){
+            var roads = {}
+            // var sum = 0
+            // danger.forEach(function(road){
+            // 	if(road.name != "road_all"){
+            // 		sum+=road.points[0][1]
+            // 	}            		
+            // })
+            // var danger_avg =Math.ceil(sum/(danger.length-1))
+            // console.log(danger_avg)
+            var danger_threshold = 10
+            danger.forEach(function(road){
+        		if(road.name != "road_all")
+            		roads[road.name] = (road.points[0][1] > danger_threshold)? {"security":1} : {"security":0}
+            })
+
+            influxdbday.query('select count(avg_traffic) from /road_*/ where avg_traffic >=4').then(function(traffic){
+        	 	// var sum = 0
+           //  	traffic.forEach(function(road){
+	          //   	if(road.name != "road_all"){
+	          //   		sum+=road.points[0][1]
+	          //   	}            		
+	          //   })
+	          //   var traffic_avg =Math.ceil(sum/(traffic.length-1))
+	          //   console.log(traffic_avg)
+	          	var traffic_threshold = 20
+	            traffic.forEach(function(road){
+        			if(road.name != "road_all")
+        				roads[road.name]["planning"] = (road.points[0][1] > traffic_threshold)? 1 : 0
+	            })
+                deferred.resolve(roads)
+            })
+            
+        })
+     return deferred.promise
+	}
+      
+      
+      calculateRoadTags().then(function(data){
+          console.log("dta is ")
+          console.log(data)
+          $scope.tags=data;
+      });
+      
+      $scope.show_planning = function(){
+
+      	$('#planningButton').addClass("active");
+		
+		$("statschart#2").show();
+	 	$("statschart#3").show();
+
+          for(var key in $scope.tags){
+              var id= key.split("_")[1];
+                ///changeStrokeWidth(key,0)
+                if($scope.tags[key]['planning']>=1)
+                {
+                    console.log("planning one is");
+                    console.log(id);
+                    changeStrokeColor(id,5)    
+                    changeStrokeWidth(id,10)
+                }
+          }
+      }
+      
+      $scope.show_security = function(){
+		$('#securityButton').addClass("active");
+
+		$("statschart#1").show();
+
+          for(var key in $scope.tags){
+              var id= key.split("_")[1];
+                ///changeStrokeWidth(key,0)
+                if($scope.tags[key]['security']>=1)
+                {
+                    console.log("security one is");
+                    console.log(id);
+                    changeStrokeColor(id,6)    
+                    changeStrokeWidth(id,10)
+                }
+          }
+      }
+      
+      $scope.turn_off = function(){
+
+      	$('#planningButton').removeClass("active");
+      	$('#securityButton').removeClass("active");
+
+      	$("statschart#1").hide();
+      	$("statschart#2").hide();
+      	$("statschart#3").hide();
+
+          for(var key in $scope.tags){
+              var id= key.split("_")[1];
+                ///changeStrokeWidth(key,0)
+                if($scope.tags[key]['security']>=1 || $scope.tags[key]['planning']>=1)
+                {
+                    console.log("security one is");
+                    console.log(id);
+                    changeStrokeColor(id,7)    
+                    changeStrokeWidth(id,4)
+                }
+          }
+      }
 	// ---- START Calender ----
 	// ------------------------
 	var cal = new CalHeatMap();

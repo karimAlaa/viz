@@ -291,8 +291,10 @@ text {
 
 		    <form class="navbar-form navbar-right" id="viewSwitcher">
 		    	<div class="btn-group" role="group" aria-label="...">
-				  <button type="button" class="btn btn-default" ng-click="showPlanningCharts();" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
-				  <button type="button" class="btn btn-default" ng-click="showSecurityCharts();" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+					  <button type="button" class="btn btn-default" ng-click="show_planning()" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
+					  <button type="button" class="btn btn-default" ng-click="show_security()" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+						<button type="button" class="btn btn-default"><span ng-click="turn_off()" class="glyphicon glyphicon-remove"></span></button>
+
 				</div>
 		    </form>
 
