@@ -12,15 +12,34 @@ angular.module('customVisulizationApp')
                 name:'=',
                 label:'@',
                 probability: '=',
+                roadid:'='
 			},
 			link: function(scope, element){
+                
+                scope.$watch('roadid', function(newval){
+                    console.log("IN WATCH");
+                    if(scope.roadid)  
+                    {
+                        //$('#chart'+scope.id).html("");
+                        console.log("getting chart");
+                        scope.chartConfig={};
+                        $rootScope.safeApply();
+                        //angular.element(document.getElementById("chart"+scope.id)).highcharts().destroy();
+                        scope.getchart();
+                    }
+                  }
+                 );
+                
                 console.log(scope.probability);
                 console.log("datatype issss");
                 console.log(scope.dataType);
                 //scope.influx = {'min': influxdbmin, 'hour': influxdbhour}
                 //console.log(scope.influx);
                 scope.influx = {'min': influxdbmin, 'hour': influxdbhour, 'day': influxdbday, 'month':influxdbday}
-                var id="216";
+                
+                //var id="216";
+                
+                // all the data
                 var start_date='2013-06-13 22:00:00';
                 var end_date='2014-05-10 22:00:00';
                 
@@ -101,7 +120,7 @@ angular.module('customVisulizationApp')
                         else{
                             gran="month"
                         }
-                        getData(id, getInfluxDate(e.min), getInfluxDate(e.max), gran).then(function(data){
+                        getData(scope.roadid, getInfluxDate(e.min), getInfluxDate(e.max), gran).then(function(data){
                             if(gran!="month")
                             {
                                 data[0].points.forEach(function(a){
@@ -150,7 +169,10 @@ angular.module('customVisulizationApp')
                 }
                 
                 
-                getData(id,start_date, end_date, "month").then(function(data){
+                scope.getchart = function()
+                {
+                    
+                getData(scope.roadid,start_date, end_date, "month").then(function(data){
                     
                     console.log("pointsssss");
                       console.log(data[0].points);
@@ -189,8 +211,9 @@ angular.module('customVisulizationApp')
                      //console.log("in chart");
                      //console.log(scope.results[7]);
                         console.log("minnnn");
-                    console.log(series[0]['data']);
-                      scope.chartConfig = {
+                        console.log(series[0]['data']);
+                        scope.chartConfig=null;
+                        scope.chartConfig = {
                               options: {
                                 chart: {
                                     type: 'line',
@@ -264,11 +287,13 @@ angular.module('customVisulizationApp')
                           
                       }
                       
+                     
                       
                       // on zoom get per hour instead of day.
                       
                       
                     })
+                }
                 
             }
         }

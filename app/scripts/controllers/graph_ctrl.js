@@ -53,6 +53,9 @@ angular.module('customVisulizationApp')
 
 	 })
  
+ 	var security_icon = "/img/security.ico"
+ 	var planning_icon = "/img/planning.ico"
+ 	
  	var Colors = ["darkgreen", "#2ECC71", "#F1C40F", "#F39C12", "#E74C3C", "purple", "pink", "black"]
     var graph = 'data.json'
 	
@@ -207,6 +210,26 @@ angular.module('customVisulizationApp')
 		    	getDataFor("road_"+d.road_id, true);
 		    	selectRoad(d.road_id);
 		    });
+		    
+		var icons = svg.append("svg:g").selectAll("g")
+			.data(force.links()).enter().append("svg:g");
+			
+			icons.append("image").attr("xlink:href",security_icon)
+		    .attr("width", 24).attr("height", 24)
+		    .style("cursor", "pointer")
+            .style("display", "none")
+        	.attr("class", function(d){
+        		return "roads_icons icon_" + d.road_id;
+        	})
+        	.attr("x", function(d){
+	     		return Math.abs(x(((d.target.x - d.source.x)/4)-20))
+	     	})
+        	.attr("transform", function(d) {
+            	return "translate(" +((d.target.x+d.source.x)/2) + "," + ((d.target.y+d.source.y))/2 + ")";
+    		})
+    		.on('click', function(d){
+    			BahiaWork(d.road_id);
+    		});
 
 	    var linktext = svg.append("svg:g")
 	    	.selectAll("g.linklabelholder")
@@ -261,14 +284,12 @@ angular.module('customVisulizationApp')
 		    .data(force.nodes())
 		    .enter().append("g")
 		    .attr("class", function(d){
-		    	if(d.invisible)
-		    		return "node invisible"
-		    	else
-		    		return "node"
-		    })
-		    .attr("class", function(d){
-		    	return "node node_id_" + d.id;
-		    })
+		    	if(d.invisible){
+		    		return "node invisible node_id_" + d.id;
+		    	}else{
+		    		return "node node_id_" + d.id;
+		    	}
+		    });
 		    // .call(force.drag);
 
 		node.append("circle")
@@ -300,7 +321,13 @@ angular.module('customVisulizationApp')
 		    });
 
 		    node.attr("transform", function(d) { 
-		  	    return "translate(" + d3.event.translate+ ") scale(" + d3.event.scale + ")"; });
+		  	    return "translate(" + d3.event.translate+ ") scale(" + d3.event.scale + ")"; 
+	  	    });
+	  	    
+	  	    icons.attr("transform", function(d) {
+            	return "translate(" + d3.event.translate+ ") scale(" + d3.event.scale + ")";
+    		});
+		  	    
 		}
 
 		tick()
@@ -352,8 +379,11 @@ angular.module('customVisulizationApp')
     	var d = new Date(val)
     	current_day = d;
     	var prev_d = new Date(val);
+    	var next_d = new Date(val);
     	prev_d.setDate(prev_d.getDate() - 1)
-        date.text(d);
+    	next_d.setDate(next_d.getDate() + 1)
+        // date.text(d);
+        $('rect[data-date^="' + next_d.toUTCString() + '"]').show();
         $('rect[data-date^="' + prev_d.toUTCString() + '"]').show();
         $('rect[data-date^="' + d.toUTCString() + '"]').hide();
     }
@@ -482,11 +512,14 @@ angular.module('customVisulizationApp')
       
       $scope.show_planning = function(){
 
+
       	$('#planningButton').addClass("active");
 		
 		$("statschart#2").show();
 	 	$("statschart#3").show();
 
+  		  $(".roads_icons").hide();
+  		  resetRoads();
           for(var key in $scope.tags){
               var id= key.split("_")[1];
                 ///changeStrokeWidth(key,0)
@@ -496,14 +529,20 @@ angular.module('customVisulizationApp')
                     console.log(id);
                     changeStrokeColor(id,5)    
                     changeStrokeWidth(id,10)
+                    $(".icon_" + id).show();
+                    $(".icon_" + id).attr("href", planning_icon);
                 }
           }
       }
       
       $scope.show_security = function(){
+
 		$('#securityButton').addClass("active");
 
 		$("statschart#1").show();
+
+      	  $(".roads_icons").hide();
+      	  resetRoads();
 
           for(var key in $scope.tags){
               var id= key.split("_")[1];
@@ -514,11 +553,14 @@ angular.module('customVisulizationApp')
                     console.log(id);
                     changeStrokeColor(id,6)    
                     changeStrokeWidth(id,10)
+                    $(".icon_" + id).show();
+                    $(".icon_" + id).attr("href", security_icon);
                 }
           }
       }
       
       $scope.turn_off = function(){
+
 
       	$('#planningButton').removeClass("active");
       	$('#securityButton').removeClass("active");
@@ -538,6 +580,21 @@ angular.module('customVisulizationApp')
                     changeStrokeWidth(id,4)
                 }
           }
+
+          // for(var key in $scope.tags){
+              // var id= key.split("_")[1];
+                // ///changeStrokeWidth(key,0)
+                // if($scope.tags[key]['security']>=1 || $scope.tags[key]['planning']>=1)
+                // {
+                    // console.log("security one is");
+                    // console.log(id);
+                    // changeStrokeColor(id,7)    
+                    // changeStrokeWidth(id,4)
+                // }
+          // }
+          resetRoads();
+          $(".roads_icons").hide();
+
       }
 	// ---- START Calender ----
 	// ------------------------
@@ -727,6 +784,17 @@ angular.module('customVisulizationApp')
 	
 	// ------------------------
 	// ----- END Calender -----  
+
+	function resetRoads(){
+		$(".link").css('stroke-width',"2px");
+		$(".link").css('stroke',"#000");
+	}
+
+	function BahiaWork(road_id){
+        $scope.chartid=road_id;
+        $scope.safeApply();
+		console.log("Bahia Work: " + road_id);
+	}
 
 })
 
