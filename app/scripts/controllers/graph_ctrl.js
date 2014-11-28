@@ -325,7 +325,8 @@ angular.module('customVisulizationApp')
         return obj
     }  
 		
-	// START Calender
+	// ---- START Calender ----
+	// ------------------------
 	var cal = new CalHeatMap();
 	function setupCalender(data){
 		cal.init({
@@ -365,6 +366,18 @@ angular.module('customVisulizationApp')
 			"last Date:" + format(lastday) + "<br/>" +
 			"Val:" + nb
 		);
+		
+		// Start: Move the animation to the first day of this week
+		var times = Object.keys(date_template).sort();
+		for(var i = 0; i < times.length; i++){
+			if(parseInt(times[i]) > firstday.getTime()){
+				$("rect").show();
+				time_index = i;
+				break;
+			}
+		}
+		// End: Move the animation to the first day of this week 
+		
 		// Call Bahia code to display the week 
 	}
 	
@@ -380,6 +393,7 @@ angular.module('customVisulizationApp')
 	}
 	
 	var current_selected_road_id = null;
+	
 	function getDataFor(db_name, update){
 		var url = "http://54.173.41.125:8086/db/bey2ollak_day/series?u=root&p=root&q=select%20avg_traffic%20from%20" + db_name + "%20order%20asc";
 		$.ajax({
@@ -419,6 +433,7 @@ angular.module('customVisulizationApp')
 		getDataFor("road_all", false);
 	})
 	
-	// END Calender  
+	// ------------------------
+	// ----- END Calender -----  
 
 })
