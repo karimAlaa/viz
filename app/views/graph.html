@@ -278,8 +278,9 @@ text {
 
 		    <form class="navbar-form navbar-right" id="viewSwitcher">
 		    	<div class="btn-group" role="group" aria-label="...">
-				  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-road"></span></button>
-				  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+				  <button type="button" class="btn btn-default"><span ng-click="show_planning()" class="glyphicon glyphicon-road"></span></button>
+				  <button type="button" class="btn btn-default"><span ng-click="show_security()" class="glyphicon glyphicon-exclamation-sign"></span></button>
+                    <button type="button" class="btn btn-default"><span ng-click="turn_off()" class="glyphicon glyphicon-remove"></span></button>
 				</div>
 		    </form>
 
