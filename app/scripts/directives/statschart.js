@@ -6,15 +6,21 @@ angular.module('customVisulizationApp')
 			restrict: 'E',
 			//replace:true, 
             templateUrl:'/views/statschart.html',
-//			scope:{
-//				tracks:'=',
-//			},
+			scope:{
+				dataType:'=type',
+                id:'=',
+                name:'=',
+                label:'@',
+                probability: '=',
+			},
 			link: function(scope, element){
-                
+                console.log(scope.probability);
+                console.log("datatype issss");
+                console.log(scope.dataType);
                 //scope.influx = {'min': influxdbmin, 'hour': influxdbhour}
                 //console.log(scope.influx);
                 scope.influx = {'min': influxdbmin, 'hour': influxdbhour, 'day': influxdbday, 'month':influxdbday}
-                var id="all";
+                var id="216";
                 var start_date='2013-06-13 22:00:00';
                 var end_date='2014-05-10 22:00:00';
                 
@@ -39,12 +45,28 @@ angular.module('customVisulizationApp')
                     console.log("start is ");
                     console.log(start_date);
                     
+                    var select=[];
+                    var select2=[]
+                    for(var i=0; i< scope.dataType.length; i++)
+                    {
+                        console.log("over here");
+                        console.log(scope.dataType[i]);
+                        if(scope.probability)
+                        {
+                            select.push("sum(\""+scope.dataType[i]+"\"*total_reports)")
+                            select2.push("\""+scope.dataType[i]+"\"*total_reports")
+                        }else{
+                            select.push("sum(\""+scope.dataType[i]+"\")")
+                            select2.push("\""+scope.dataType[i]+"\"")
+                        }
+                    };
+                    select= select.join(",")
                     console.log("end date is ");
                     console.log(end_date);
                     if(group_by_time=="month")
-                        var query="select sum(\"7\") from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"' group by time(1M)";
+                        var query="select "+select+" from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"' group by time(1M)";
                     else
-                        var query="select \"7\" from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"' ";       
+                        var query="select "+select2+" from road_"+id+" where time > '"+start_date+"' and time < '"+end_date+"' ";       
                     //group_by_time use to pick table later
                     scope.influx[group_by_time].query(query+" order asc").then(function(results){
                         deferred.resolve(results)
@@ -56,7 +78,7 @@ angular.module('customVisulizationApp')
                 
                 var afterSetExtremes = function(e){
                     console.log(e);
-                    var chart = angular.element(document.getElementById("chart2")).highcharts();
+                    var chart = angular.element(document.getElementById("chart"+scope.id)).highcharts();
                     console.log(chart);
                     chart.showLoading('Loading data from server...');
                     getInfluxDate(e.min);
@@ -87,7 +109,41 @@ angular.module('customVisulizationApp')
                                 });
                             }
                             
-                            chart.series[0].setData(data[0].points);
+                            // if data[0].points[0].length>2 // keep making multiple series
+                            
+                            
+                            var series=[]
+                            if(data[0].points[0].length>2)
+                            {
+                                 data[0].points.forEach(function(a){
+                                    for(var i=1; i<data[0].points[0].length; i++)
+                                    {
+
+                                        if(series[i-1] != undefined)
+                                        {
+                                            series[i-1]['data'].push([a[0],a[i]])
+                                            console.log("here in defined");
+                                            console.log(series[i-1]);
+                                        }
+                                        else
+                                        {
+                                            console.log("here in undefined");
+                                            series[i-1]={data:([[a[0],a[i]]]), name: scope.name[i-1]}
+                                            console.log(series[i-1]);
+                                        }
+                                    }
+                                 }); 
+                            }
+                        else
+                            series=[{data:data[0].points, name:scope.name[0]}]
+                            
+                            
+                            for(var g=0; g<series.length; g++){
+                                chart.series[g].setData(series[g].data);    
+                            };
+                            
+                            
+                            
                             chart.hideLoading();
                         });
                     }
@@ -96,9 +152,36 @@ angular.module('customVisulizationApp')
                 
                 getData(id,start_date, end_date, "month").then(function(data){
                     
+                    console.log("pointsssss");
                       console.log(data[0].points);
                       scope.results=data[0].points;
 
+                    
+                         // if data[0].points[0].length>2 // keep making multiple series
+                        var series=[]
+                        if(scope.results[0].length>2)
+                        {
+                             scope.results.forEach(function(a){
+                                for(var i=1; i<scope.results[0].length; i++)
+                                {
+                                    
+                                    if(series[i-1] != undefined)
+                                    {
+                                        series[i-1]['data'].push([a[0],a[i]])
+                                        console.log("here in defined");
+                                        console.log(series[i-1]);
+                                    }
+                                    else
+                                    {
+                                        console.log("here in undefined");
+                                        series[i-1]={data:([[a[0],a[i]]]), name:scope.name[i-1]}
+                                        console.log(series[i-1]);
+                                    }
+                                }
+                             }); 
+                        }
+                    else
+                        series=[{data:scope.results, name:scope.name[0]}]
 //                      scope.results.forEach(function(a){
 //                            a.splice(1,1);
 //                      }); //removing sequence number
@@ -106,7 +189,7 @@ angular.module('customVisulizationApp')
                      //console.log("in chart");
                      //console.log(scope.results[7]);
                         console.log("minnnn");
-                    console.log(scope.results[0][0]);
+                    console.log(series[0]['data']);
                       scope.chartConfig = {
                               options: {
                                 chart: {
@@ -167,10 +250,7 @@ angular.module('customVisulizationApp')
                             },
                             },
                             useHighStocks: true,
-                            series: [{
-                                name: "Danger",
-                                data: scope.results
-                            }],
+                            series: series,
                             
                           size: {
                            width: 600,
@@ -178,7 +258,7 @@ angular.module('customVisulizationApp')
                          },
                             legend: {enabled:true},
                             title: {
-                                text: 'Danger!'
+                                text: scope.label
                             },
                             loading: false
                           
