@@ -61,6 +61,7 @@ angular.module('customVisulizationApp')
             interval_running = true
             interval_promise= $interval(function(){
                 animateRoads(roads, time_index)
+                showRoadWithStatus(current_selected_status)
                 time_index++
                 if(time_index>date_template_length-1){
                     console.log("done")
@@ -138,6 +139,9 @@ angular.module('customVisulizationApp')
     		.enter().append("g").attr("class", "linklabelholder")
      		.append("text")
 	     	.attr("class", "linklabel")
+	     	.attr("class", function(d){
+	     		return "lbl_" + d.road_id;
+     		})
 		 	.style("font-size", "6px")
 		 	.style("font-weight", "300")
 		 	.style("cursor", "pointer")
@@ -245,6 +249,7 @@ angular.module('customVisulizationApp')
 
     function printDate(val){
     	var d = new Date(val)
+    	current_day = d;
     	var prev_d = new Date(val);
     	prev_d.setDate(prev_d.getDate() - 1)
         date.text(d);
@@ -392,8 +397,9 @@ angular.module('customVisulizationApp')
 	 	return selected_list;
 	}
 	
-	var current_selected_road_id = null;
-	
+	var current_selected_road_id = null;		// hold the current selected road id,
+	var current_day = new Date(start_date);		// hold the current day, initially eq to the data first day 
+	var current_selected_status = -1;
 	function getDataFor(db_name, update){
 		var url = "http://54.173.41.125:8086/db/bey2ollak_day/series?u=root&p=root&q=select%20avg_traffic%20from%20" + db_name + "%20order%20asc";
 		$.ajax({
@@ -430,8 +436,34 @@ angular.module('customVisulizationApp')
 	}
 	
 	$(function(){
+		$("#traffic_flow_slider a").bind("click", function(){
+			showRoadWithStatus($(this).data()["status"]);
+		})
 		getDataFor("road_all", false);
 	})
+	
+	function showRoadWithStatus(status){
+		current_selected_status = status;
+		var times = Object.keys(date_template).sort();
+		var current_idx;
+		for(var i = 0; i < times.length; i++){
+			if(parseInt(times[i]) > current_day.getTime()){
+				current_idx = i;
+				break;
+			}
+		}
+		$("text").show();
+		$(".link").show();
+		roads.forEach(function(road){
+			if(road.data){
+				var road_status = road.data[current_idx][1];
+				if(road_status < current_selected_status){
+					$(".lbl_" + road.road_id).hide();
+					$("." + road.road_id).hide();
+				}
+			}
+		})
+	}
 	
 	// ------------------------
 	// ----- END Calender -----  
