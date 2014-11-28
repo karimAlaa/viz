@@ -223,6 +223,9 @@ angular.module('customVisulizationApp')
         	.attr("class", function(d){
         		return "roads_icons icon_" + d.road_id;
         	})
+        	.attr("x", function(d){
+	     		return Math.abs(x(((d.target.x - d.source.x)/4)-20))
+	     	})
         	.attr("transform", function(d) {
             	return "translate(" +((d.target.x+d.source.x)/2) + "," + ((d.target.y+d.source.y))/2 + ")";
     		})
@@ -283,14 +286,12 @@ angular.module('customVisulizationApp')
 		    .data(force.nodes())
 		    .enter().append("g")
 		    .attr("class", function(d){
-		    	if(d.invisible)
-		    		return "node invisible"
-		    	else
-		    		return "node"
-		    })
-		    .attr("class", function(d){
-		    	return "node node_id_" + d.id;
-		    })
+		    	if(d.invisible){
+		    		return "node invisible node_id_" + d.id;
+		    	}else{
+		    		return "node node_id_" + d.id;
+		    	}
+		    });
 		    // .call(force.drag);
 
 		node.append("circle")
