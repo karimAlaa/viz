@@ -358,10 +358,7 @@ angular.module('customVisulizationApp')
     	prev_d.setDate(prev_d.getDate() - 1)
         date.text(d);
         $('rect[data-date^="' + prev_d.toUTCString() + '"]').show();
-        //$('rect[data-date^="' + d.toUTCString() + '"]').hide();
-        //$('rect[data-date^="' + prev_d.toUTCString() + '"]').animate({ fill: "#34495E" });
-        $('rect[data-date^="' + d.toUTCString() + '"]').css("fill", "#34495E");
-
+        $('rect[data-date^="' + d.toUTCString() + '"]').hide();
     }
 
     function animateRoads(roads, index){
