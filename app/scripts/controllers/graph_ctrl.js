@@ -463,7 +463,7 @@ angular.module('customVisulizationApp')
 		roads.forEach(function(road){
 			if(road.data){
 				var road_status = road.data[current_idx][1];
-				if(road_status < current_selected_status){
+				if(road_status < current_selected_status || road_status > current_selected_status+1){
 					$(".lbl_" + road.road_id).hide();
 					$("." + road.road_id).hide();
 				}
