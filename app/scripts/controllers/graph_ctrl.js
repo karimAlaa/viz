@@ -377,6 +377,13 @@ angular.module('customVisulizationApp')
 		var firstday = new Date(date.setDate(first));
 		var lastday = new Date(date.setDate(last));
 		var format = d3.time.format("%Y-%m-%d %H:%M:%S");
+        
+        var firstw = date.getDate() - date.getDay() -1;
+		var lastw = first + 6;
+		var firstdayw = new Date(date.setDate(firstw));
+		var lastdayw = new Date(date.setDate(lastw));
+        var formatweek1 = d3.time.format("%Y-%m-%d 22:00:00");
+        var formatweek2 = d3.time.format("%Y-%m-%d 21:00:00");
 		$("#onClick-placeholder").html(
 			"first Date:" + format(firstday) + "<br/>" +
 			"last Date:" + format(lastday) + "<br/>" +
