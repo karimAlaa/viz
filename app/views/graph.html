@@ -52,7 +52,7 @@
 		margin:0 auto;
 		width:1400px;
 		color:#FFF;
-		border: 1px dashed #333;
+		/*border: 1px dashed #333;*/
 		fill: black;
 	}	
 	.date {
@@ -80,17 +80,24 @@
 	}
 
 	circle {
-	  /*fill: #ccc;*/
-	  fill: wheat;
-	  stroke: rgb(108, 83, 55);
-	  stroke-width: 2px;
+	  /*fill: #ccc;
+	  fill: wheat;*/
+		fill: #BDC3C7;
+	  /*stroke: rgb(108, 83, 55);
+	  stroke-width: 2px;*/
 	}
+
+
+text {
+	fill: #34495E;
+}
+
 		/* Calender CSS*/
 	      	rect.highlight{
-	      		fill: #afd9ee !important;
+	      		fill: #34495E !important;
 	      	}
 
-	      	.q1{
+	      	/*.q1{
 	      		fill: darkgreen !important;
 	      	}
 	      	
@@ -108,12 +115,54 @@
 	      	
 	      	.q5{
 	      		fill: red !important;
+	      	}*/
+
+	      	.subdomain-text {
+	      		fill: #FFFFFF !important;
+	      	}
+
+	      	.graph-rect {
+	      		fill: #BDC3C7 !important;
+	      	}
+
+	      	.q1{
+	      		fill: darkgreen !important;
+	      	}
+	      	
+	      	.q2{
+	      		fill: #2ECC71 !important;
+	      	}
+	      	
+	      	.q3{
+	      		fill: #F1C40F !important;
+	      	}
+	      	
+	      	.q4{
+	      		fill: #F39C12 !important;
+	      	}
+	      	
+	      	.q5{
+	      		fill: #E74C3C !important;
 	      	}
 	      	
       	/* Calender CSS*/
+	}
 
   body {
   	position: relative;
+  }
+
+  div.date {
+		color: #7F8C8D;
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		padding: 15px;
+		letter-spacing: 1px;
+		font-weight: 200pt;
+  }
+
+  .navbar-default {
+  	background: none;
+  	border: none;
   }
 
   #viewSwitcher {
@@ -139,7 +188,7 @@
 
 	#sidePanelCloser {
 		background: #BDC3C7;
-		padding: 3px;
+		padding: 0;
 		text-align: center;
 		cursor:pointer;
     position: relative;
@@ -147,6 +196,10 @@
     top:0;
     border-radius: 5px 0 0 5px;
     color: #2C3E50;
+	}
+
+	#sidePanelCloser a.btn {
+		padding: 7px;
 	}
 
 	#sidePanelContent {
@@ -158,7 +211,7 @@
 
 	#animationControls {
 		position: absolute;
-		bottom: 60px;
+		bottom: 250px;
 		left: 45%;
 		width: 118px;
 	}
@@ -195,7 +248,7 @@
 		</div>
 
 		<div id="sidePanel" class="col-md-3">
-				<div class="col-md-1" id="sidePanelCloser"><span class="glyphicon glyphicon-chevron-left"></span></div>
+				<div class="col-md-1" id="sidePanelCloser"><a class="btn"><span class="glyphicon glyphicon-chevron-left"></span></a></div>
 				<div class="col-md-11" id="sidePanelContent"></div>
 		</div>
 
@@ -203,9 +256,9 @@
 			<form class="form-inline" id="viewSwitcher">
 				<div class="form-group">
 		    	<div class="btn-group" role="group" aria-label="...">
-					  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></button>
-					  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-play"></span></button>
-					  <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></button>
+					  <button type="button" id="backwardButton" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></button>
+					  <button type="button" id="playButton" class="btn btn-default"><span class="glyphicon glyphicon-play"></span></button>
+					  <button type="button" id="forwardButton" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></button>
 					</div>
 				</div>
 		   </form>

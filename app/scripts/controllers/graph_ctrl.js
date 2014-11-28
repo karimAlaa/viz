@@ -20,8 +20,6 @@ angular.module('customVisulizationApp')
 	 		var currentOffset = $("#sidePanelCloser").offset();
 	 		var currentLocation = -(screenWidth - currentOffset.left - btnWidth);
 
-	 		console.log("Locations: " + currentLocation + " / " + location)
-
 	 		if(currentLocation != location) {
 	 			$('#sidePanelCloser').animate({ right: "0" }, 1000)
 	 			$('#sidePanelCloser span').removeClass("glyphicon glyphicon-chevron-left");
@@ -34,6 +32,26 @@ angular.module('customVisulizationApp')
 
 	        $('#sidePanelContent').toggle("slide", {direction:'right'}, 1000);
 	    });
+
+	    $('#playButton').on('click', function(){
+	    	$(this).children("span").each(function() {
+	    		if($(this).hasClass("glyphicon-play")) {
+		    		
+		    		startPauseAnimation();
+	    		} else {
+		    		startPauseAnimation();
+	    		}
+	    	});
+	    })
+
+	    $('#backwardButton').on('click', function() {
+	    	DecTimeIndex();
+	    })
+
+	    $('#forwardButton').on('click', function() {
+	    	IncTimeIndex();
+	    })
+
 	 })
 
  
@@ -55,13 +73,12 @@ angular.module('customVisulizationApp')
     	.domain([0, height])
     	.range([0,height]);
 
+    var date = d3.select(".graph").append("div")
+        .attr("class", "date");
+
 	var svg = d3.select(".graph").append("svg")
 		    .attr("width", width)
 		    .attr("height", height)
-		    
-
- 	var date = d3.select(".graph").append("div")
-        .attr("class", "date");
 
     var start_date = '2013-06-13'
     var end_date = '2014-05-10'
@@ -80,18 +97,38 @@ angular.module('customVisulizationApp')
 	roads.forEach(function(road){
 		getData(road.road_id, start_date, end_date, group_by_time).then(function(data){
             road.data = data
-            console.log(road)
+            //console.log(road)
        	})
 	})       
 
     shortcut.add("Enter",function() {
-        if(interval_running){
+        startPauseAnimation()
+    },{"disable_in_input" : false, 'propagate':false});
+
+    shortcut.add("left",function() {
+        DecTimeIndex();
+    })
+
+    shortcut.add("right",function() {
+        IncTimeIndex();
+    })
+
+    function startPauseAnimation() {
+    	if(interval_running){
             console.log("stop")
+            $("#playButton").children("span").each(function() {
+	            $(this).removeClass("glyphicon-pause");
+			    $(this).addClass("glyphicon-play");
+			});
             $interval.cancel(interval_promise)
             interval_running = false
         }
         else{
             console.log("start")
+            $("#playButton").children("span").each(function() {
+	            $(this).removeClass("glyphicon-play");
+			    $(this).addClass("glyphicon-pause");
+			});
             interval_running = true
             interval_promise= $interval(function(){
                 animateRoads(roads, time_index)
@@ -104,22 +141,21 @@ angular.module('customVisulizationApp')
                 }
             },speed)
         }
-        
-    },{"disable_in_input" : false, 'propagate':false});
+    }
 
-    shortcut.add("left",function() {
-        if(!interval_running){
+    function DecTimeIndex() {
+		if(!interval_running){
             time_index--
             animateRoads(roads, time_index)
         }
-    })
+    }
 
-    shortcut.add("right",function() {
-        if(!interval_running){
+    function IncTimeIndex() {
+    	if(!interval_running){
             time_index++
             animateRoads(roads, time_index)
         }
-    })
+    }
 
 
 	d3.json(graph, function(json) {		
@@ -263,7 +299,7 @@ angular.module('customVisulizationApp')
     }
 
     function changeStrokeWidth(id, val){
-        console.log("width: "+val)
+        //console.log("width: "+val)
         var width = val == -1? 1.5 : val/2
         $('.'+id).css('stroke-width',width)
     }
@@ -273,8 +309,7 @@ angular.module('customVisulizationApp')
         // var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
         //$('.'+id).css('stroke', color)    
         if(val != -1)
-        	$('.'+id).css('stroke', hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1))    
-        
+        	$('.'+id).css('stroke', hsv2rgb(Math.floor((4 - val) * 120 / 4), 0.8, 0.9))
     }
 
     function printDate(val){
@@ -283,7 +318,10 @@ angular.module('customVisulizationApp')
     	prev_d.setDate(prev_d.getDate() - 1)
         date.text(d);
         $('rect[data-date^="' + prev_d.toUTCString() + '"]').show();
-        $('rect[data-date^="' + d.toUTCString() + '"]').hide();
+        //$('rect[data-date^="' + d.toUTCString() + '"]').hide();
+        //$('rect[data-date^="' + prev_d.toUTCString() + '"]').animate({ fill: "#34495E" });
+        $('rect[data-date^="' + d.toUTCString() + '"]').css("fill", "#34495E");
+
     }
 
     function animateRoads(roads, index){
@@ -395,8 +433,8 @@ angular.module('customVisulizationApp')
 		var lastday = new Date(date.setDate(last));
 		var format = d3.time.format("%Y-%m-%d %H:%M:%S");
 		$("#onClick-placeholder").html(
-			"first Date:" + format(firstday) + "<br/>" +
-			"last Date:" + format(lastday) + "<br/>" +
+			"first Date:" + format(firstday) + " | " +
+			"last Date:" + format(lastday) + " | " +
 			"Val:" + nb
 		);
 		// Call Bahia code to display the week 
