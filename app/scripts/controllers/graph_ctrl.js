@@ -460,39 +460,45 @@ angular.module('customVisulizationApp')
 	
 	function showRoadWithStatus(status){
 		current_selected_status = status;
-		var times = Object.keys(date_template).sort();
-		var current_idx;
-		for(var i = 0; i < times.length; i++){
-			if(parseInt(times[i]) > current_day.getTime()){
-				current_idx = i;
-				break;
-			}
-		}
-		$("text").show();
-		$(".link").show();
-		$(".node").show();
-		roads.forEach(function(road){
-			if(road.data){
-				var road_status = road.data[current_idx][1];
-				if(road_status < current_selected_status || road_status > current_selected_status+1){
-					$(".lbl_" + road.road_id).hide();
-					$("." + road.road_id).hide();
+		if(current_selected_status == -1){
+			$("text").show();
+			$(".link").show();
+			$(".node").show();
+		}else{
+			var times = Object.keys(date_template).sort();
+			var current_idx;
+			for(var i = 0; i < times.length; i++){
+				if(parseInt(times[i]) > current_day.getTime()){
+					current_idx = i;
+					break;
 				}
 			}
-		})
-		
-		// Hide un-needed nodes
-		$.each( nodes_roads, function( key, links ) {
-		  var hide = true;
-		  $.each(links, function( link_index, link ) {
-  				$.each($("."+link), function( link_index, elem ) {
-		  			if(elem.outerHTML.indexOf("display: none") == -1)
-		  				hide = false;
-  				}) 
-		  });
-		  if(hide)
-		  	$(".node_id_" + key).hide();
-		});
+			$("text").show();
+			$(".link").show();
+			$(".node").show();
+			roads.forEach(function(road){
+				if(road.data){
+					var road_status = road.data[current_idx][1];
+					if(road_status < current_selected_status || road_status > current_selected_status+1){
+						$(".lbl_" + road.road_id).hide();
+						$("." + road.road_id).hide();
+					}
+				}
+			})
+			
+			// Hide un-needed nodes
+			$.each( nodes_roads, function( key, links ) {
+			  var hide = true;
+			  $.each(links, function( link_index, link ) {
+	  				$.each($("."+link), function( link_index, elem ) {
+			  			if(elem.outerHTML.indexOf("display: none") == -1)
+			  				hide = false;
+	  				}) 
+			  });
+			  if(hide)
+			  	$(".node_id_" + key).hide();
+			});
+		}
 	}
 	
 	// build a map to hold {node: [roads]}
