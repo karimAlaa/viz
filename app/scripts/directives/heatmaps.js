@@ -15,7 +15,7 @@ angular.module('customVisulizationApp')
                 
                 
                 scope.$watchCollection('[showRoad,startofweek,endofweek]', function(newval){
-                    if(scope.showRoad)  
+                    if(scope.showRoad && scope.startofweek)  
                         scope.letsdothis();
                   }
                  );

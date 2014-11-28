@@ -3,6 +3,7 @@
 angular.module('customVisulizationApp')
   .controller('graphCtrl', function ($scope, statistics, util, influxdbday, $q, $interval) {
  
+ 	var Colors = ["darkgreen", "#2ECC71", "#F1C40F", "#F39C12", "#E74C3C"]
     var graph = 'data.json'
 	
     var request = new XMLHttpRequest();
@@ -44,7 +45,7 @@ angular.module('customVisulizationApp')
     var date_template_length =Object.keys(date_template).length
 
     var time_index= 0
-    var speed= 500
+    var speed= 1200
     var interval_running = false
     var interval_promise= null
 
@@ -250,8 +251,9 @@ angular.module('customVisulizationApp')
         // console.log("color: "+val)
         // var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
         //$('.'+id).css('stroke', color)    
-        if(val != -1)
-        	$('.'+id).css('stroke', hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1))    
+        if(val != -1){
+        	$('.'+id).css('stroke', Colors[Math.floor(val)])
+    	}
         
     }
 
@@ -357,7 +359,7 @@ angular.module('customVisulizationApp')
 			// highlight: select_range(new Date(2014, 3, 14), new Date(2014, 5, 14)),
 			onClick: click_day,
 			data: data,
-			legend: [1, 2, 3, 4, 5],
+			legend: [1, 2, 3, 4],
 			onComplete: function(){
 				var cells = $(".graph-rect");
 				$(".graph-rect").each(function( index ) {
@@ -395,7 +397,6 @@ angular.module('customVisulizationApp')
 		// Call Bahia code to display the week 
         $scope.startofweek= format(firstday)
         $scope.endofweek= format(lastday)
-        $scope.road="all"
         console.log( $scope.road);
         $scope.safeApply();
 	}
@@ -453,9 +454,10 @@ angular.module('customVisulizationApp')
 	
 	$(function(){
 		$("#traffic_flow_slider a").bind("click", function(){
-			showRoadWithStatus($(this).data()["status"]);
+			showRoadWithStatus(parseInt($(this).data()["status"]));
 		})
 		getDataFor("road_all", false);
+		$scope.road="all"
 	})
 	
 	function showRoadWithStatus(status){
@@ -479,7 +481,7 @@ angular.module('customVisulizationApp')
 			roads.forEach(function(road){
 				if(road.data){
 					var road_status = road.data[current_idx][1];
-					if(road_status < current_selected_status || road_status > current_selected_status+1){
+					if(Math.floor(road_status) != current_selected_status){
 						$(".lbl_" + road.road_id).hide();
 						$("." + road.road_id).hide();
 					}
