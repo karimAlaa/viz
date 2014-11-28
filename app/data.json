@@ -78,8 +78,6 @@
     {"road_id":"122", "source":26, "target":9,   "short_name":"Da2ery", "name":"Da2ery;Me7war To Waslet Maryoutia",       "map_ids":[]},   
     {"road_id":"289", "source":13, "target":39,  "short_name":"Da2ery", "name":"Da2ery;Wa7at Road To Nazlet Sa7rawy",       "map_ids":[]},
     {"road_id":"292", "source":39, "target":13,  "short_name":"Da2ery", "name":"Da2ery;Nazlet Sa7rawy To Wa7at Road",       "map_ids":[]},
-    {"road_id":"477", "source":39, "target":9,   "short_name":"Da2ery", "name":"Da2ery;Sa7rawy To Waslet Maryoutia",       "map_ids":[]},
-    {"road_id":"475", "source":9,  "target":39,  "short_name":"Da2ery", "name":"Da2ery;Waslet Maryoutia To Sa7rawy",       "map_ids":[]},
     {"road_id":"125", "source":9,  "target":10,  "short_name":"Da2ery", "name":"Da2ery;Waslet Maryoutia To Moneeb",       "map_ids":[]},
     {"road_id":"126", "source":10, "target":9,   "short_name":"Da2ery", "name":"Da2ery;Moneeb To Waslet Maryoutia",       "map_ids":[]},
     {"road_id":"31",  "source":11, "target":17,  "short_name":"Da2ery", "name":"Da2ery;Autostrad To Moneeb",       "map_ids":[]},
