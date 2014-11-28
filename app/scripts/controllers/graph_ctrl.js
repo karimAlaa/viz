@@ -219,7 +219,7 @@ angular.module('customVisulizationApp')
 			icons.append("image").attr("xlink:href",security_icon)
 		    .attr("width", 24).attr("height", 24)
 		    .style("cursor", "pointer")
-        	// .style("display", "none")
+        	.style("display", "none")
         	.attr("class", function(d){
         		return "roads_icons icon_" + d.road_id;
         	})
@@ -326,7 +326,7 @@ angular.module('customVisulizationApp')
 	  	    });
 	  	    
 	  	    icons.attr("transform", function(d) {
-            	return "translate(" +((d.target.x+d.source.x)/2) + "," + ((d.target.y+d.source.y))/2 + ")";
+            	return "translate(" + d3.event.translate+ ") scale(" + d3.event.scale + ")";
     		});
 		  	    
 		}
@@ -541,7 +541,6 @@ angular.module('customVisulizationApp')
                     console.log(id);
                     changeStrokeColor(id,6)    
                     changeStrokeWidth(id,10)
-                    $(".roads_icons").hide();
                     $(".icon_" + id).show();
                     $(".icon_" + id).attr("href", security_icon);
                 }
