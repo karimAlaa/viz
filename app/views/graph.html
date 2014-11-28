@@ -102,15 +102,15 @@ text {
 	      	}
 	      	
 	      	.q2{
-	      		fill: lightgreen !important;
+	      		fill: #2ECC71 !important;
 	      	}
 	      	
 	      	.q3{
-	      		fill: yellow !important;
+	      		fill: #F1C40F !important;
 	      	}
 	      	
 	      	.q4{
-	      		fill: orange !important;
+	      		fill: #F39C12 !important;
 	      	}
 	      	
 	      	.q5{
@@ -145,6 +145,10 @@ text {
 	      		fill: #E74C3C !important;
 	      	}
 	      	
+	      	#traffic_flow_slider a:hover{
+	      		cursor: pointer;
+	      		text-decoration: none;
+	      	}
       	/* Calender CSS*/
 	}
 
@@ -171,7 +175,6 @@ text {
 
 	#trafficFlowFiltration {
 		width: 40px;
-		height: 250px;
 		background: #BDC3C7;
 		position: absolute;
 		top: 100px;
@@ -179,8 +182,45 @@ text {
 		border-radius: 5px;
 	}
 
+	#trafficFlowFiltration ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	#trafficFlowFiltration li {
+		width: 40px;
+		height: 40px;
+	}
+
+	#trafficFlowFiltration li a {
+		display: block;
+		height: 40px;
+		cursor: pointer;
+	}
+
+	.side_0{
+	   background: darkgreen;
+	}
+	
+	.side_1{
+	  background: #2ECC71;
+	 }
+	      	
+	.side_2{
+	  background: #F1C40F;
+	}
+	      	
+	.side_3{
+	  background: #F39C12;
+	}
+	      	
+	.side_4{
+	  background: #E74C3C;
+	  border-radius: 5px 5px 0 0;
+	}
+
 	#sidePanel {
-		overflow-y: scroll;
 		position: absolute;
 		top: 100px;
 		right: -15px;
@@ -207,6 +247,8 @@ text {
 		height: 400px;
 		display:none;
 		border-radius: 0 0 0 5px;
+		overflow-y: scroll;
+		padding: 10px;
 	}
 
 	#animationControls {
@@ -230,7 +272,7 @@ text {
 
 		    <div class="navbar-header">
 		      <a class="navbar-brand" href="#">
-		        Park
+		        2allak
 		      </a>
 		    </div>
 
@@ -244,12 +286,27 @@ text {
 		</nav>
 
 		<div id="trafficFlowFiltration">
-			
+			<ul>
+	    	<li><a data-status="4" class="side_4" data-toggle="tooltip" data-placement="right" title="Mafeesh Amal"></a></li>
+	    	<li><a data-status="3" class="side_3" data-toggle="tooltip" data-placement="right" title="Za7ma"></a></li>
+	    	<li><a data-status="2" class="side_2" data-toggle="tooltip" data-placement="right" title="Mashy"></a></li>
+	    	<li><a data-status="1" class="side_1" data-toggle="tooltip" data-placement="right" title="Lazeez"></a></li>
+	    	<li><a data-status="0" class="side_0" data-toggle="tooltip" data-placement="right" title="7alawa"></a></li>
+	    	<li><a data-status="-1" data-toggle="tooltip" data-placement="right" title="All"></a></li>
+	  	</ul>
 		</div>
 
-		<div id="sidePanel" class="col-md-3">
+		<div id="sidePanel" class="col-md-6">
 				<div class="col-md-1" id="sidePanelCloser"><a class="btn"><span class="glyphicon glyphicon-chevron-left"></span></a></div>
-				<div class="col-md-11" id="sidePanelContent"></div>
+				<div class="col-md-11" id="sidePanelContent">
+					
+					<daychart road="road" startofweek="startofweek" endofweek="endofweek"></daychart>
+
+					<statschart id="1" type="[7]" name="['danger']" label="Security" probability="false"></statschart>
+					<statschart id="2" type="[8,9]" name="['accidents', '3otl']" label="Maintenance" probability="false"></statschart>
+					<statschart id="3" type="[5]" name="['Mafeesh Amal']" label="Tawaso3at" probability="true"></statschart>
+
+				</div>
 		</div>
 
 		<div id="animationControls">
@@ -274,4 +331,7 @@ text {
 	</div>
 
 <div class="graph"></div>
+	
+</div>
+
 

@@ -1,14 +1,15 @@
 'use strict';
 
 angular.module('customVisulizationApp')
-  .controller('graphCtrl', function ($scope, statistics, util, influxdb, $q, $interval) {
+  .controller('graphCtrl', function ($scope, statistics, util, influxdbday, $q, $interval) {
 
   	/* 
   	 * UI Initialization
 	 */
 
 	 $(document).ready(function(){
-	 	//$("#sidePanelContent").css("width", "0px");
+	 	$('[data-toggle="tooltip"]').tooltip()
+	 	
 	 	var offset = $("#sidePanelCloser").offset();
 	 	var screenWidth = $(window).width();
 	 	var btnWidth = $('#sidePanelCloser').width();
@@ -53,15 +54,20 @@ angular.module('customVisulizationApp')
 	    })
 
 	 })
-
  
+ 	var Colors = ["darkgreen", "#2ECC71", "#F1C40F", "#F39C12", "#E74C3C"]
     var graph = 'data.json'
-
+	
     var request = new XMLHttpRequest();
     request.open("GET", graph, false);
     request.send(null)
-    var roads = JSON.parse(request.responseText).links;
-
+    var res = JSON.parse(request.responseText)
+    var roads = res.links;
+	var nodes_roads = buildNodesRoads(res);
+	$scope.road=false
+    $scope.startofweek=""
+    $scope.endofweek=""
+      
 	var width = 1400,
     	height = 610;
 
@@ -90,7 +96,7 @@ angular.module('customVisulizationApp')
     var date_template_length =Object.keys(date_template).length
 
     var time_index= 0
-    var speed= 500
+    var speed= 1200
     var interval_running = false
     var interval_promise= null
 
@@ -124,6 +130,7 @@ angular.module('customVisulizationApp')
             interval_running = false
         }
         else{
+
             console.log("start")
             $("#playButton").children("span").each(function() {
 	            $(this).removeClass("glyphicon-play");
@@ -132,9 +139,10 @@ angular.module('customVisulizationApp')
             interval_running = true
             interval_promise= $interval(function(){
                 animateRoads(roads, time_index)
+                showRoadWithStatus(current_selected_status)
                 time_index++
                 if(time_index>date_template_length-1){
-                    console.log("done")
+                    //console.log("done")
                     $interval.cancel(interval_promise)
                     interval_running = false
                     time_index = 0
@@ -197,7 +205,7 @@ angular.module('customVisulizationApp')
 			})
 		    .attr("marker-end", "url(#end)")
 		    .on('click', function(d, i){
-		    	console.log(d.road_id + " is Selected");
+		    	//console.log(d.road_id + " is Selected");
 		    	getDataFor("road_"+d.road_id, true);
 		    	selectRoad(d.road_id);
 		    });
@@ -208,6 +216,9 @@ angular.module('customVisulizationApp')
     		.enter().append("g").attr("class", "linklabelholder")
      		.append("text")
 	     	.attr("class", "linklabel")
+	     	.attr("class", function(d){
+	     		return "lbl_" + d.road_id;
+     		})
 		 	.style("font-size", "6px")
 		 	.style("font-weight", "300")
 		 	.style("cursor", "pointer")
@@ -218,7 +229,7 @@ angular.module('customVisulizationApp')
 	     	.attr("text-anchor", "start")
 		   	.style("fill","#000")
 		   	.on('click', function(d, i){
-		    	console.log(d.road_id + " is Selected");
+		    	//console.log(d.road_id + " is Selected");
 		    	getDataFor("road_"+d.road_id, true);
 		    	selectRoad(d.road_id);
 		    });
@@ -238,6 +249,9 @@ angular.module('customVisulizationApp')
 		    		return "node invisible"
 		    	else
 		    		return "node"
+		    })
+		    .attr("class", function(d){
+		    	return "node node_id_" + d.id;
 		    })
 		    // .call(force.drag);
 
@@ -292,7 +306,7 @@ angular.module('customVisulizationApp')
 
     function influxQuery(query){
         var deferred = $q.defer();
-        influxdb.query(query+"order asc").then(function(results){
+        influxdbday.query(query+"order asc").then(function(results){
             deferred.resolve(results[0].points)
         })
         return deferred.promise
@@ -308,12 +322,19 @@ angular.module('customVisulizationApp')
         // console.log("color: "+val)
         // var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
         //$('.'+id).css('stroke', color)    
-        if(val != -1)
-        	$('.'+id).css('stroke', hsv2rgb(Math.floor((4 - val) * 120 / 4), 0.8, 0.9))
+
+        //if(val != -1)
+        	//$('.'+id).css('stroke', hsv2rgb(Math.floor((4 - val) * 120 / 4), 0.8, 0.9))
+
+        if(val != -1){
+        	$('.'+id).css('stroke', Colors[Math.floor(val)])
+    	}
+
     }
 
     function printDate(val){
     	var d = new Date(val)
+    	current_day = d;
     	var prev_d = new Date(val);
     	prev_d.setDate(prev_d.getDate() - 1)
         date.text(d);
@@ -397,7 +418,8 @@ angular.module('customVisulizationApp')
         return obj
     }  
 		
-	// START Calender
+	// ---- START Calender ----
+	// ------------------------
 	var cal = new CalHeatMap();
 	function setupCalender(data){
 		cal.init({
@@ -415,7 +437,7 @@ angular.module('customVisulizationApp')
 			// highlight: select_range(new Date(2014, 3, 14), new Date(2014, 5, 14)),
 			onClick: click_day,
 			data: data,
-			legend: [1, 2, 3, 4, 5],
+			legend: [1, 2, 3, 4],
 			onComplete: function(){
 				var cells = $(".graph-rect");
 				$(".graph-rect").each(function( index ) {
@@ -427,17 +449,41 @@ angular.module('customVisulizationApp')
 	}
 	
 	function click_day(date, nb){
+        console.log( $scope.road);
 		var first = date.getDate() - date.getDay();
 		var last = first + 6;
 		var firstday = new Date(date.setDate(first));
 		var lastday = new Date(date.setDate(last));
 		var format = d3.time.format("%Y-%m-%d %H:%M:%S");
+        
+        var firstw = date.getDate() - date.getDay() -1;
+		var lastw = first + 6;
+		var firstdayw = new Date(date.setDate(firstw));
+		var lastdayw = new Date(date.setDate(lastw));
+        var formatweek1 = d3.time.format("%Y-%m-%d 22:00:00");
+        var formatweek2 = d3.time.format("%Y-%m-%d 21:00:00");
 		$("#onClick-placeholder").html(
 			"first Date:" + format(firstday) + " | " +
 			"last Date:" + format(lastday) + " | " +
 			"Val:" + nb
 		);
+		
+		// Start: Move the animation to the first day of this week
+		var times = Object.keys(date_template).sort();
+		for(var i = 0; i < times.length; i++){
+			if(parseInt(times[i]) > firstday.getTime()){
+				$("rect").show();
+				time_index = i;
+				break;
+			}
+		}
+		// End: Move the animation to the first day of this week 
+		console.log("here now");
 		// Call Bahia code to display the week 
+        $scope.startofweek= format(firstday)
+        $scope.endofweek= format(lastday)
+        console.log( $scope.road);
+        $scope.safeApply();
 	}
 	
 	// mark the given range
@@ -451,7 +497,9 @@ angular.module('customVisulizationApp')
 	 	return selected_list;
 	}
 	
-	var current_selected_road_id = null;
+	var current_selected_road_id = null;		// hold the current selected road id,
+	var current_day = new Date(start_date);		// hold the current day, initially eq to the data first day 
+	var current_selected_status = -1;
 	function getDataFor(db_name, update){
 		var url = "http://54.173.41.125:8086/db/bey2ollak_day/series?u=root&p=root&q=select%20avg_traffic%20from%20" + db_name + "%20order%20asc";
 		$.ajax({
@@ -485,12 +533,79 @@ angular.module('customVisulizationApp')
 			current_selected_road_id = id;
 			$('.'+id).css('stroke-width',"4px");
 		}
+        $scope.road= id;
+        $scope.safeApply();
 	}
 	
 	$(function(){
+		$("#trafficFlowFiltration a").bind("click", function(){
+			showRoadWithStatus(parseInt($(this).data()["status"]));
+		})
 		getDataFor("road_all", false);
+		$scope.road="all"
 	})
 	
-	// END Calender  
+	function showRoadWithStatus(status){
+		current_selected_status = status;
+		if(current_selected_status == -1){
+			$("text").show();
+			$(".link").show();
+			$(".node").show();
+		}else{
+			var times = Object.keys(date_template).sort();
+			var current_idx;
+			for(var i = 0; i < times.length; i++){
+				if(parseInt(times[i]) > current_day.getTime()){
+					current_idx = i - 1;
+					break;
+				}
+			}
+			$("text").show();
+			$(".link").show();
+			$(".node").show();
+			roads.forEach(function(road){
+				if(road.data){
+					var road_status = road.data[current_idx][1];
+					if(Math.floor(road_status) != current_selected_status){
+						$(".lbl_" + road.road_id).hide();
+						$("." + road.road_id).hide();
+					}
+				}
+			})
+			
+			// Hide un-needed nodes
+			$.each( nodes_roads, function( key, links ) {
+			  var hide = true;
+			  $.each(links, function( link_index, link ) {
+	  				$.each($("."+link), function( link_index, elem ) {
+			  			if(elem.outerHTML.indexOf("display: none") == -1)
+			  				hide = false;
+	  				}) 
+			  });
+			  if(hide)
+			  	$(".node_id_" + key).hide();
+			});
+		}
+	}
+	
+	// build a map to hold {node: [roads]}
+	function buildNodesRoads(g){
+		var m = {};
+		var n = g["nodes"];
+		var l = g["links"];
+		$.each(n, function( node_index, node ) {
+			var roads_list = [];
+			$.each(l, function( link_index, link ) {
+				if( (link.source == node.id || link.target == node.id) && roads_list.indexOf(link.road_id) == -1)
+					roads_list.push(link.road_id);
+			});
+			m[node.id] = roads_list;
+		});
+		return m;
+	}
+	
+	// ------------------------
+	// ----- END Calender -----  
 
 })
+

@@ -9,7 +9,27 @@ angular.module('customVisulizationApp')
     log: 'trace',
     apiVersion: '1.0'
   });
-}).service('influxdb', function () {
+}).service('influxdbmin', function () {
+  var opts={
+	  	host: '54.173.41.125',
+	    port: 8086,
+	    username:'root',
+	    password:'root',
+	    database:'bey2ollak_min'
+	}
+  return new InfluxDB(opts);
+
+}).service('influxdbhour', function () {
+  var opts={
+	  	host: '54.173.41.125',
+	    port: 8086,
+	    username:'root',
+	    password:'root',
+	    database:'bey2ollak_hour'
+	}
+  return new InfluxDB(opts);
+
+}).service('influxdbday', function () {
   var opts={
 	  	host: '54.173.41.125',
 	    port: 8086,

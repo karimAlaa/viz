@@ -72,11 +72,25 @@
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+
+<!--
         <script src="bower_components/highcharts/highcharts.js"></script>
         <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+-->
         <!-- endbuild -->
         <script src="scripts/externals/shortcut.js"></script>
         <script src="scripts/externals/cal-heatmap.min.js"></script>
+
+<!--        <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>-->
+<!--        <script src="bower_components/highcharts/highcharts.js"></script>-->
+<!--        <script src="bower_components/highstock/js/highstock.src.js"></script>-->
+      <script src="scripts/externals/highstock.js"></script>  
+      <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+        <!-- endbuild -->
+        <script src="scripts/externals/shortcut.js"></script>
+        
+        <script src="scripts/externals/cal-heatmap.min.js"></script>
+
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
@@ -89,6 +103,9 @@
         <script src="scripts/services/db_curl.js"></script>
         <script src="scripts/services/statistics.js"></script>
         <script src="scripts/services/util.js"></script>
+      
+        <script src="scripts/directives/heatmaps.js"></script>
+        <script src="scripts/directives/statschart.js"></script>
         <!-- endbuild -->
 </body>
 </html>
