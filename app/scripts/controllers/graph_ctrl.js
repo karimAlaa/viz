@@ -478,7 +478,7 @@ angular.module('customVisulizationApp')
 			var current_idx;
 			for(var i = 0; i < times.length; i++){
 				if(parseInt(times[i]) > current_day.getTime()){
-					current_idx = i;
+					current_idx = i - 1;
 					break;
 				}
 			}
