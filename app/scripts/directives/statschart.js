@@ -22,6 +22,8 @@ angular.module('customVisulizationApp')
                     {
                         //$('#chart'+scope.id).html("");
                         console.log("getting chart");
+                        scope.chartConfig={};
+                        $rootScope.safeApply();
                         //angular.element(document.getElementById("chart"+scope.id)).highcharts().destroy();
                         scope.getchart();
                     }
