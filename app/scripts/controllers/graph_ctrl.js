@@ -61,6 +61,11 @@ angular.module('customVisulizationApp')
     var graph = 'data.json'
 	var colorBase = 0.25;
 	
+	var default_stroke_width = "2.6px";
+	var selected_stroke_width = "4.5px";
+	var font_size = "6px;"
+	var font_weight = "350"	
+	
     var request = new XMLHttpRequest();
     request.open("GET", graph, false);
     request.send(null)
@@ -200,6 +205,7 @@ angular.module('customVisulizationApp')
 		var path = svg.append("svg:g").selectAll("path")
 		    .data(force.links())
 		  	.enter().append("svg:path")
+		  	.style("stroke-width", default_stroke_width)
 		    .attr("class", function(d){
 		    	return "link " + d.road_id
 		    })
@@ -242,8 +248,8 @@ angular.module('customVisulizationApp')
 	     	.attr("class", function(d){
 	     		return "lbl_" + d.road_id;
      		})
-		 	.style("font-size", "6px")
-		 	.style("font-weight", "300")
+		 	.style("font-size", font_size)
+		 	.style("font-weight", font_weight)
 		 	.style("cursor", "pointer")
 	     	.attr("x", function(d){
                 console.log("D IS!!");
@@ -252,7 +258,7 @@ angular.module('customVisulizationApp')
 	     	})
 		 	//.attr("dy", "-5")
 	     	.attr("text-anchor", "start")
-		   	.style("fill","#000")
+		   	.style("fill","#666")
 		   	.on('click', function(d, i){
 		    	//console.log(d.road_id + " is Selected");
 		    	getDataFor("road_"+d.road_id, true);
@@ -564,6 +570,7 @@ angular.module('customVisulizationApp')
           // }
           resetRoads();
           $(".roads_icons").hide();
+          animateRoads(roads, time_index);
       }
 	// ---- START Calender ----
 	// ------------------------
@@ -591,6 +598,7 @@ angular.module('customVisulizationApp')
 				  $(this).attr("data-date", cell_st_date.toUTCString());
 				  cell_st_date.setDate(cell_st_date.getDate() + 1);
 				});
+				animateRoads(roads, 0);
 			}
 		});
 	}
@@ -676,12 +684,12 @@ angular.module('customVisulizationApp')
 	
 	function selectRoad(id){
 		if(current_selected_road_id){
-			$('.'+current_selected_road_id).css('stroke-width',"2px");
+			$('.'+current_selected_road_id).css('stroke-width',default_stroke_width);
 			current_selected_road_id = id;
-			$('.'+id).css('stroke-width',"4px");
+			$('.'+id).css('stroke-width',selected_stroke_width);
 		}else{
 			current_selected_road_id = id;
-			$('.'+id).css('stroke-width',"4px");
+			$('.'+id).css('stroke-width',selected_stroke_width);
 		}
         $scope.road= id;
         $scope.safeApply();
@@ -758,7 +766,7 @@ angular.module('customVisulizationApp')
 	// ----- END Calender -----  
 
 	function resetRoads(){
-		$(".link").css('stroke-width',"2px");
+		$(".link").css('stroke-width',default_stroke_width);
 		$(".link").css('stroke',"#666");
 	}
 
