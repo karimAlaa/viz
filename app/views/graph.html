@@ -342,9 +342,24 @@ text {
 	}	
 
 	#cooccurrence{
-		width: 820px;
-		height: 820px;
-		display: none;
+		height: 600px;
+		display: block;
+	}
+
+	.modal, .modal-body, .modal-content {
+		height: 700px;
+		overflow: visible;
+	}
+
+	.modal {
+		width: 90%;
+		top: 0;
+		left: 25%;
+		background: none;
+	}
+
+	.modal iframe {
+		width: 100%;
 	}
 </style>
 
@@ -363,7 +378,7 @@ text {
 					  <button type="button" class="btn btn-default" ng-click="show_planning()" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
 					  <button type="button" class="btn btn-default" ng-click="show_security()" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
 						<button type="button" class="btn btn-default"><span ng-click="turn_off()" class="glyphicon glyphicon-remove"></span></button>
-						<button type="button" class="btn btn-default"><span ng-click="toggleMatrix()" class="glyphicon glyphicon-stats"></span></button>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#cooccurrenceModal"><span ng-click="toggleMatrix()" class="glyphicon glyphicon-stats"></span></button>
 
 				</div>
 		    </form>
@@ -414,8 +429,36 @@ text {
 			</div>
 		</nav>
 	</div>
-<iframe id="cooccurrence" ng-src="{{getCooccurrenceUrl()}}"> </iframe>
+
 <div class="graph"></div>
+
+<div class="modal fade" tabindex="-1" id="cooccurrenceModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Co-Occurrence Matrix</h4>
+      </div>
+      <div class="modal-body">
+
+				<iframe id="cooccurrence" ng-src="{{getCooccurrenceUrl()}}"> </iframe>
+			</div>
+    </div>
+</div>
+
+<!-- Co-occurrence matrix Modal -->
+<!-- <div class="modal fade" tabindex="-1" id="cooccurrenceModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Co-Occurrence Matrix</h4>
+      </div>
+      <div class="modal-body">-->
+        
+      <!--</div>
+    </div>
+  </div>
+</div>-->
 	
 </div>
 
