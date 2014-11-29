@@ -516,6 +516,7 @@ angular.module('customVisulizationApp')
 
 
       	$('#planningButton').addClass("active");
+      	$('#securityButton').removeClass("active");
 		
 		$("statschart#2").show();
 	 	$("statschart#3").show();
@@ -540,6 +541,7 @@ angular.module('customVisulizationApp')
       $scope.show_security = function(){
 
 		$('#securityButton').addClass("active");
+		$('#planningButton').removeClass("active");
 
 		$("statschart#1").show();
 
