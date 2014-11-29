@@ -362,7 +362,7 @@ angular.module('customVisulizationApp')
     }
 
     function changeStrokeColor(id, val){
-        // console.log("color: "+val)
+
         // var color = (val == -1)? hsv2rgb(0,0,0) : hsv2rgb(Math.floor((4 - val) * 120 / 4), 1, 1);
         //$('.'+id).css('stroke', color)    
 
@@ -598,6 +598,19 @@ angular.module('customVisulizationApp')
           $(".roads_icons").hide();
 
       }
+    
+    var showMatrix = false
+	$scope.toggleMatrix = function(){
+		if(showMatrix)
+			$("#cooccurrence").hide();
+		else
+			$("#cooccurrence").show();
+		showMatrix = !showMatrix;
+    }
+    
+    $scope.getCooccurrenceUrl = function(){
+		return window.location.href.substring(0, window.location.href.indexOf("/#")) + "/#/cooccurrence"
+    }
 	// ---- START Calender ----
 	// ------------------------
 	var cal = new CalHeatMap();
@@ -802,4 +815,3 @@ angular.module('customVisulizationApp')
 	}
 
 })
-

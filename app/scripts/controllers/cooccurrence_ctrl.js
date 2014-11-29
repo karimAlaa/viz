@@ -4,8 +4,8 @@ angular.module('customVisulizationApp')
   .controller('cooccurrenceCtrl', function ($scope) {
 
   	var margin = {top: 220, right: 0, bottom: 10, left: 220},
-    width = 720,
-    height = 720;
+    width = 800,
+    height = 800;
 
 
     var request = new XMLHttpRequest();
