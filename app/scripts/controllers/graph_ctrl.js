@@ -55,7 +55,7 @@ angular.module('customVisulizationApp')
 
 	 })
  
- 	var security_icon = "/img/security.ico"
+ 	var security_icon = "/img/security2.ico"
  	var planning_icon = "/img/planning.ico"
  	var Colors = ["purple", "pink", "black", "#FF0000", "#FF1900", "#FF2300", "#FF5F00", "#FF6E00", "#FF9100", "#FFA000", "#FFAF00", "#FFBE00", "#FFCD00", "#FFDC00", "#FFFF00", "#FAFF00", "#E1FF00", "#C3FF00", "#A5FF00", "#6EFF00", "#55FF00", "#2DFF00", "#0AFF00"].reverse();
     var graph = 'data.json'

@@ -155,7 +155,11 @@ angular.module('customVisulizationApp')
                 .style("text-anchor", "middle")
                 .attr("transform", "translate(" + gridSize / 2 + ", -6)")
                 .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
-
+            
+                var div = d3.select("body").append("div")   
+                    .attr("class", "tooltip")               
+                    .style("opacity", 0);
+                
           var heatMap = svg.selectAll(".hour")
               .data(road)
               .enter().append("rect")
@@ -174,10 +178,18 @@ angular.module('customVisulizationApp')
               .attr("width", gridSize)
               .attr("height", gridSize)
               .style("fill", colors[0])
-              .on("click", function (d) {
-                    // write value somewhere
-                   scope.current_val = d[2];
-                   $rootScope.safeApply();
+              .on("mouseover", function(d) {      
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div.html(d[2])  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(500)      
+                        .style("opacity", 0);   
                 });  
                 //heatMap
           heatMap.transition().duration(1000)
