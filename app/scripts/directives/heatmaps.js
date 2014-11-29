@@ -30,9 +30,12 @@ angular.module('customVisulizationApp')
                   height = 350 - margin.top - margin.bottom,
                   gridSize = Math.floor(width / 24),
                   legendElementWidth = gridSize*2,
-                  buckets = 6,
+                  buckets = 18,
                   //colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
-                  colors= ['white','darkgreen', '#2ECC71', '#F1C40F', '#F39C12', '#E74C3C'],
+                  //colors= ['white','#160206', '#2E040C' ,'#460612', '#5E0818', '#740A1E', '#8B0D24', '#A30F2B', '#BB1131', '#D11337', '#DC143C', '#E9153D', '#EC2C50', '#EE4464', '#F05A76', '#F2728A', 'darkgreen', 'lightgreen', 'yellow', 'orange', 'red'],
+                    
+                    //"#FF1900", // "#FFCD00" //"#FAFF00"
+                colors = ["#FF0000",  "#FF2300", "#FF5F00", "#FF6E00", "#FF9100", "#FFA000", "#FFAF00", "#FFBE00", "#FFDC00", "#FFFF00", "#E1FF00", "#C3FF00", "#A5FF00", "#6EFF00", "#55FF00", "#2DFF00", "#0AFF00", 'white'].reverse(),
                   days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
                   times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12a"];
 
@@ -123,7 +126,7 @@ angular.module('customVisulizationApp')
                 console.log(road)
             
           var colorScale = d3.scale.quantile()
-              .domain([0,1,2,3,4,5])
+              .domain([0,1,1.25,1.5,1.75,2,2.25,2.5,2.75,3,3.25,3.5,3.75,4,4.25,4.5,4.75,5])
               .range(colors);
          d3.select("#chart").select("svg").remove();
           var svg = d3.select("#chart").append("svg")
@@ -151,7 +154,11 @@ angular.module('customVisulizationApp')
                 .style("text-anchor", "middle")
                 .attr("transform", "translate(" + gridSize / 2 + ", -6)")
                 .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
-
+            
+                var div = d3.select("body").append("div")   
+                    .attr("class", "tooltip")               
+                    .style("opacity", 0);
+                
           var heatMap = svg.selectAll(".hour")
               .data(road)
               .enter().append("rect")
@@ -169,37 +176,50 @@ angular.module('customVisulizationApp')
               .attr("class", "hour bordered")
               .attr("width", gridSize)
               .attr("height", gridSize)
-              .style("fill", colors[0]);
-
+              .style("fill", colors[0])
+              .on("mouseover", function(d) {      
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div.html(d[2])  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(500)      
+                        .style("opacity", 0);   
+                });  
+                //heatMap
           heatMap.transition().duration(1000)
               .style("fill", function(d) {
                   //console.log(d);
                   //console.log(colorScale(d[2]));
-                  return colorScale(Math.round(d[2])); 
+                  return colorScale((d[2])); 
               });
 
           heatMap.append("title").text(function(d) { return d.value; });
               
-          var legend = svg.selectAll(".legend")
-              .data([0].concat(colorScale.quantiles()), function(d) { return d; })
-              .enter().append("g")
-              .attr("class", "legend");
-
-          legend.append("rect")
-            .attr("x", function(d, i) { return legendElementWidth * i; })
-            .attr("y", height)
-            .attr("width", legendElementWidth)
-            .attr("height", gridSize / 2)
-            .style("fill", function(d, i) { return colors[i]; });
-
-          legend.append("text")
-            .attr("class", "mono")
-            .text(function(d) {
-                //console.log(d);
-                return "≥ " + Math.ceil(d); 
-            })
-            .attr("x", function(d, i) { return legendElementWidth * i; })
-            .attr("y", height + gridSize);
+//          var legend = svg.selectAll(".legend")
+//              .data([0].concat(colorScale.quantiles()), function(d) { return d; })
+//              .enter().append("g")
+//              .attr("class", "legend");
+//
+//          legend.append("rect")
+//            .attr("x", function(d, i) { return legendElementWidth * i; })
+//            .attr("y", height)
+//            .attr("width", legendElementWidth)
+//            .attr("height", gridSize / 2)
+//            .style("fill", function(d, i) { return colors[i]; });
+//
+//          legend.append("text")
+//            .attr("class", "mono")
+//            .text(function(d) {
+//                //console.log(d);
+//                return "≥ " + Math.ceil(d); 
+//            })
+//            .attr("x", function(d, i) { return legendElementWidth * i; })
+//            .attr("y", height + gridSize);
       //});
             }
             }
