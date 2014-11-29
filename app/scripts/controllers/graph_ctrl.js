@@ -61,7 +61,7 @@ angular.module('customVisulizationApp')
     var graph = 'data.json'
 	var colorBase = 0.25;
 	
-	var default_stroke_width = "2.6px";
+	var default_stroke_width = "2.3px";
 	var selected_stroke_width = "4.5px";
 	var font_size = "6px;"
 	var font_weight = "350"	
@@ -570,7 +570,9 @@ angular.module('customVisulizationApp')
           // }
           resetRoads();
           $(".roads_icons").hide();
-          animateRoads(roads, time_index);
+          getDataFor("road_all", true);
+		  $scope.road="all"
+		  animateRoads(roads, time_index);
       }
 	// ---- START Calender ----
 	// ------------------------
@@ -598,7 +600,7 @@ angular.module('customVisulizationApp')
 				  $(this).attr("data-date", cell_st_date.toUTCString());
 				  cell_st_date.setDate(cell_st_date.getDate() + 1);
 				});
-				animateRoads(roads, 0);
+				animateRoads(roads, time_index);
 			}
 		});
 	}
