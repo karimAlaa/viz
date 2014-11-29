@@ -6,22 +6,33 @@ angular.module('customVisulizationApp')
 			restrict: 'E',
 			//replace:true, 
             templateUrl:'/views/day-chart.html',
-//			scope:{
-//				tracks:'=',
-//			},
+			scope:{
+				showRoad:"=road",
+                startofweek:"=",
+                endofweek:"=",
+			},
 			link: function(scope, element){
                 
+                
+                scope.$watchCollection('[showRoad,startofweek,endofweek]', function(newval){
+                    if(scope.showRoad && scope.startofweek)  
+                        scope.letsdothis();
+                  }
+                 );
+                
+                console.log("ROAD IS");
+                console.log(scope.showRoad);
                 scope.influx = {'min': influxdbmin, 'hour': influxdbhour}
                 console.log(scope.influx);
                 
                 var margin = { top: 50, right: 0, bottom: 100, left: 30 },
-                  width = 960 - margin.left - margin.right,
-                  height = 430 - margin.top - margin.bottom,
+                  width = 600 - margin.left - margin.right,
+                  height = 350 - margin.top - margin.bottom,
                   gridSize = Math.floor(width / 24),
                   legendElementWidth = gridSize*2,
-                  buckets = 5,
+                  buckets = 6,
                   //colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
-                  colors= ['darkgreen', 'lightgreen', 'yellow', 'orange', 'red'],
+                  colors= ['white','darkgreen', '#2ECC71', '#F1C40F', '#F39C12', '#E74C3C'],
                   days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
                   times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12a"];
 
@@ -32,18 +43,23 @@ angular.module('customVisulizationApp')
                 var roads = JSON.parse(request.responseText).links;
                 
                 // assuming data for one road
-                roads=[{"road_id":"31"}]
+                
+                
+                scope.letsdothis = function(){
+                    
+                roads=[{"road_id":scope.showRoad}]
                 
                 roads.forEach(function(road){
                     //var start_date='2013-12-30';
-                    var start_date='2013-06-29 22:00:00';
-                    var end_date='2013-07-06 22:00:00';
+                    var start_date=scope.startofweek;
+                    var end_date=scope.endofweek;
                     getData(road.road_id, start_date, end_date, "hour").then(function(data){
                         road.data = data
                         setup(road.data);
                         console.log(road)
                     })
 	            })
+                }
                 
                 function getData(id, start_date, end_date, group_by_time) {
                     var deferred = $q.defer();
@@ -104,11 +120,12 @@ angular.module('customVisulizationApp')
         
             var setup = function(road)
             {
+                console.log(road)
             
           var colorScale = d3.scale.quantile()
-              .domain([0,1,2,3,4])
+              .domain([0,1,2,3,4,5])
               .range(colors);
-
+         d3.select("#chart").select("svg").remove();
           var svg = d3.select("#chart").append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)

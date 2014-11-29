@@ -11,6 +11,8 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/bootstrap.css">
         <link rel="stylesheet" href="styles/main.css">
@@ -46,6 +48,7 @@
     <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
     <script src="http://get.influxdb.org/influxdb-latest.js" ></script>
     <script src="bower_components/jquery/jquery.js"></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
     <script src="bower_components/angular/angular.js"></script>
 
         <!-- build:js scripts/plugins.js -->
@@ -69,11 +72,24 @@
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<!--
         <script src="bower_components/highcharts/highcharts.js"></script>
         <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+-->
         <!-- endbuild -->
         <script src="scripts/externals/shortcut.js"></script>
         <script src="scripts/externals/cal-heatmap.min.js"></script>
+
+<!--        <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>-->
+<!--        <script src="bower_components/highcharts/highcharts.js"></script>-->
+<!--        <script src="bower_components/highstock/js/highstock.src.js"></script>-->
+      <script src="scripts/externals/highstock.js"></script>  
+      <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+        <!-- endbuild -->
+        <script src="scripts/externals/shortcut.js"></script>
+        
+        <script src="scripts/externals/cal-heatmap.min.js"></script>
+
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
@@ -90,6 +106,7 @@
         <script src="scripts/services/util.js"></script>
       
         <script src="scripts/directives/heatmaps.js"></script>
+        <script src="scripts/directives/statschart.js"></script>
         <!-- endbuild -->
 </body>
 </html>

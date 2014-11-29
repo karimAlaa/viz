@@ -52,8 +52,9 @@
 		margin:0 auto;
 		width:1400px;
 		color:#FFF;
-		border: 1px dashed #333;
+		/*border: 1px dashed #333;*/
 		fill: black;
+		background: #FFFFFF;
 	}	
 	.date {
         position: absolute;
@@ -80,14 +81,49 @@
 	}
 
 	circle {
-	  /*fill: #ccc;*/
-	  fill: wheat;
-	  stroke: rgb(108, 83, 55);
-	  stroke-width: 2px;
+	  /*fill: #ccc;
+	  fill: wheat;*/
+		fill: #BDC3C7;
+	  /*stroke: rgb(108, 83, 55);
+	  stroke-width: 2px;*/
 	}
+
+
+text {
+	fill: #34495E;
+}
+
 		/* Calender CSS*/
 	      	rect.highlight{
-	      		fill: #afd9ee !important;
+	      		fill: #34495E !important;
+	      	}
+
+	      	/*.q1{
+	      		fill: darkgreen !important;
+	      	}
+	      	
+	      	.q2{
+	      		fill: #2ECC71 !important;
+	      	}
+	      	
+	      	.q3{
+	      		fill: #F1C40F !important;
+	      	}
+	      	
+	      	.q4{
+	      		fill: #F39C12 !important;
+	      	}
+	      	
+	      	.q5{
+	      		fill: red !important;
+	      	}*/
+
+	      	.subdomain-text {
+	      		fill: #FFFFFF !important;
+	      	}
+
+	      	.graph-rect {
+	      		fill: #BDC3C7 !important;
 	      	}
 
 	      	.q1{
@@ -95,27 +131,225 @@
 	      	}
 	      	
 	      	.q2{
-	      		fill: lightgreen !important;
+	      		fill: #2ECC71 !important;
 	      	}
 	      	
 	      	.q3{
-	      		fill: yellow !important;
+	      		fill: #F1C40F !important;
 	      	}
 	      	
 	      	.q4{
-	      		fill: orange !important;
+	      		fill: #F39C12 !important;
 	      	}
 	      	
 	      	.q5{
-	      		fill: red !important;
+	      		fill: #E74C3C !important;
 	      	}
 	      	
+	      	#traffic_flow_slider a:hover{
+	      		cursor: pointer;
+	      		text-decoration: none;
+	      	}
       	/* Calender CSS*/
+	}
+
+  body {
+  	position: relative;
+  }
+
+  div.date {
+		color: #7F8C8D;
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		padding: 15px;
+		letter-spacing: 1px;
+		font-weight: 200pt;
+  }
+
+  .navbar-default {
+  	background: none;
+  	border: none;
+  }
+
+  .navbar-brand img {
+  	width: 170px;
+  }
+
+  #viewSwitcher {
+		margin-right: 0;
+	}
+
+	#trafficFlowFiltration {
+		width: 40px;
+		background: #BDC3C7;
+		position: absolute;
+		top: 100px;
+		left: 15px;
+		border-radius: 5px;
+	}
+
+	#trafficFlowFiltration ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	#trafficFlowFiltration li {
+		width: 40px;
+		height: 40px;
+	}
+
+	#trafficFlowFiltration li a {
+		display: block;
+		height: 40px;
+		cursor: pointer;
+	}
+
+	.side_0{
+	   background: darkgreen;
+	}
+	
+	.side_1{
+	  background: #2ECC71;
+	 }
+	      	
+	.side_2{
+	  background: #F1C40F;
+	}
+	      	
+	.side_3{
+	  background: #F39C12;
+	}
+	      	
+	.side_4{
+	  background: #E74C3C;
+	  border-radius: 5px 5px 0 0;
+	}
+
+	#sidePanel {
+		position: absolute;
+		top: 100px;
+		right: -15px;
+	}
+
+	#sidePanelCloser {
+	background: #ECF0F1;
+		padding: 7px;
+		text-align: center;
+		cursor:pointer;
+    position: relative;
+    right: 0;
+    top:0;
+    border-radius: 5px 0 0 5px;
+    border: 1px solid #BDC3C7;
+    border-right: 1px solid #ECF0F1;
+    color: #2C3E50;
+    z-index: 1000;
+	}
+
+	#sidePanelContent {
+		background: #ECF0F1;
+		height: 400px;
+		display:none;
+		border-radius: 0 0 0 5px;
+		border: 1px solid #BDC3C7;
+		overflow-y: scroll;
+		padding: 10px;
+	}
+
+	#animationControls {
+		position: absolute;
+		bottom: 250px;
+		left: 45%;
+		width: 125px;
+	}
+
+	#calendarView {
+		padding: 10px;
+		background: #ECF0F1;
+		border-top: 1px solid #BDC3C7;
+	}
+
+	daychart div#chart, statschart div {
+		margin: 0 auto 30px auto;
+	}
+
+	daychart div#chart {
+		background: #FFFFFF;
+	}
+
+	.control.glyphicon {
+  		position: static;
+	}	
+
 </style>
 
+<div class="container-fluid">
+	
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="mainNav">
+
+		    <div class="navbar-header">
+		      <a class="navbar-brand" href="#/graph">
+		        <img src="../img/ba-logo.png" alt="">
+		      </a>
+		    </div>
+
+		    <form class="navbar-form navbar-right" id="viewSwitcher">
+		    	<div class="btn-group" role="group" aria-label="...">
+					  <button type="button" class="btn btn-default" ng-click="show_planning()" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
+					  <button type="button" class="btn btn-default" ng-click="show_security()" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+						<button type="button" class="btn btn-default"><span ng-click="turn_off()" class="glyphicon glyphicon-remove"></span></button>
+
+				</div>
+		    </form>
+
+		</nav>
+
+		<div id="trafficFlowFiltration">
+			<ul>
+	    	<li><a data-status="4" class="side_4" data-toggle="tooltip" data-placement="right" title="Mafeesh Amal"></a></li>
+	    	<li><a data-status="3" class="side_3" data-toggle="tooltip" data-placement="right" title="Za7ma"></a></li>
+	    	<li><a data-status="2" class="side_2" data-toggle="tooltip" data-placement="right" title="Mashy"></a></li>
+	    	<li><a data-status="1" class="side_1" data-toggle="tooltip" data-placement="right" title="Lazeez"></a></li>
+	    	<li><a data-status="0" class="side_0" data-toggle="tooltip" data-placement="right" title="7alawa"></a></li>
+	    	<li><a data-status="-1" data-toggle="tooltip" data-placement="right" title="All"></a></li>
+	  	</ul>
+		</div>
+
+		<div id="sidePanel" class="col-md-6">
+				<div class="col-md-1" id="sidePanelCloser"><span class="glyphicon glyphicon-chevron-left"></span></div>
+				<div class="col-md-11" id="sidePanelContent">
+					
+					<daychart road="road" startofweek="startofweek" endofweek="endofweek"></daychart>
+
+					<statschart roadid="chartid" id="1" type="[7]" name="['danger']" label="Security" probability="false"></statschart>
+					<statschart roadid="chartid" id="2" type="[8,9]" name="['accidents', '3otl']" label="Maintenance" probability="false"></statschart>
+					<statschart roadid="chartid" id="3" type="[5]" name="['Mafeesh Amal']" label="Tawaso3at" probability="true"></statschart>
+
+				</div>
+		</div>
+
+		<div id="animationControls">
+			<form class="form-inline" id="viewSwitcher">
+				<div class="form-group">
+		    	<div class="btn-group" role="group" aria-label="...">
+					  <button type="button" id="backwardButton" class="btn btn-default"><span class="glyphicon glyphicon-backward"></span></button>
+					  <button type="button" id="playButton" class="btn btn-default"><span class="glyphicon glyphicon-play"></span></button>
+					  <button type="button" id="forwardButton" class="btn btn-default"><span class="glyphicon glyphicon-forward"></span></button>
+					</div>
+				</div>
+		   </form>
+		</div>
+
+		<nav class="nav-bar navbar-default navbar-fixed-bottom" id="calendarView">
+
+			<div id="onClick-a" align="center">
+				<div id="cal-heatmap"></div>
+				<span id="onClick-placeholder"></span>
+			</div>
+		</nav>
+	</div>
+
 <div class="graph"></div>
-<br />
-<div id="onClick-a" align="center">
-	<div id="cal-heatmap"></div>
-	<span id="onClick-placeholder"></span>
+	
 </div>
+
