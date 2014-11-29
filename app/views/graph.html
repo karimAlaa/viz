@@ -281,6 +281,11 @@ text {
   		position: static;
 	}	
 
+	#cooccurrence{
+		width: 820px;
+		height: 820px;
+		display: none;
+	}
 </style>
 
 <div class="container-fluid">
@@ -298,6 +303,7 @@ text {
 					  <button type="button" class="btn btn-default" ng-click="show_planning()" id="planningButton"><span class="glyphicon glyphicon-road"></span></button>
 					  <button type="button" class="btn btn-default" ng-click="show_security()" id="securityButton"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
 						<button type="button" class="btn btn-default"><span ng-click="turn_off()" class="glyphicon glyphicon-remove"></span></button>
+						<button type="button" class="btn btn-default"><span ng-click="toggleMatrix()" class="glyphicon glyphicon-stats"></span></button>
 
 				</div>
 		    </form>
@@ -348,8 +354,9 @@ text {
 			</div>
 		</nav>
 	</div>
-
+<iframe id="cooccurrence" ng-src="{{getCooccurrenceUrl()}}"> </iframe>
 <div class="graph"></div>
+
 	
 </div>
 
